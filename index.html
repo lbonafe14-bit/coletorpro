@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ColetorPRO | Dashboard por Indústria</title><style>
 :root{--navy:#0b2742;--navy2:#123b5f;--red:#e30613;--bg:#f4f6f8;--card:#fff;--muted:#6c7783;--line:#e5e9ee;--green:#20a36a;--amber:#f0a51a;--danger:#d92935;--shadow:0 8px 24px rgba(11,39,66,.08)}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--navy);font-family:Arial,Helvetica,sans-serif}.header{min-height:150px;background:#fff;position:relative;overflow:hidden;border-bottom:1px solid #e8ebef;padding:28px 44px 24px}.header:after{content:"";position:absolute;right:-30px;top:-100px;width:270px;height:310px;background:var(--red);transform:rotate(16deg);border-radius:24px}.header:before{content:"";position:absolute;right:105px;top:-95px;width:85px;height:300px;border:2px solid var(--red);transform:rotate(16deg);border-radius:20px}.brand{position:relative;z-index:2}.eyebrow{font-size:12px;letter-spacing:3px;font-weight:800;color:var(--red);text-transform:uppercase}h1{margin:4px 0 3px;font-size:38px;letter-spacing:-1.4px;font-weight:900}h1 span{color:var(--red)}.subtitle{font-size:14px;color:var(--muted);font-weight:600}.period{position:absolute;z-index:3;right:45px;bottom:24px;background:var(--navy);color:#fff;padding:9px 15px;border-radius:8px;font-size:12px;font-weight:800}.wrap{padding:24px 44px 44px;max-width:1700px;margin:auto}.grid-kpi{display:grid;grid-template-columns:repeat(8,1fr);gap:12px;margin-bottom:20px}.kpi{background:var(--card);border-radius:12px;padding:16px;box-shadow:var(--shadow);border-top:4px solid var(--red);min-height:112px}.kpi.dark{background:var(--navy);color:#fff}.kpi .label{font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:800;letter-spacing:.7px}.kpi.dark .label{color:#d8e1e9}.kpi .value{font-size:27px;font-weight:900;margin-top:7px;letter-spacing:-1px}.kpi .note{font-size:10px;color:var(--muted);margin-top:5px}.kpi.dark .note{color:#d8e1e9}.section-title{display:flex;align-items:center;gap:10px;margin:25px 0 12px;font-size:18px;font-weight:900;text-transform:uppercase}.section-title:before{content:"";width:7px;height:24px;background:var(--red);border-radius:3px}.grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.mini-rank{margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}.mini-title{font-size:10px;font-weight:900;text-transform:uppercase;margin-bottom:7px}.empty-store{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:10px}.empty-store:last-child{border-bottom:0}.empty-dot{width:8px;height:8px;border-radius:50%;background:var(--red);flex:none}.empty-count{margin-left:auto;font-weight:900;color:var(--red)}.card{background:#fff;border-radius:14px;box-shadow:var(--shadow);padding:18px}.card-title{font-size:14px;font-weight:900;text-transform:uppercase;margin-bottom:4px}.card-sub{font-size:11px;color:var(--muted);margin-bottom:14px}.bar-chart{height:300px;display:flex;align-items:flex-end;gap:9px;padding:18px 8px 38px;border-bottom:1px solid var(--line);overflow:hidden}.bar-group{height:100%;flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;position:relative;min-width:35px}.bars{height:245px;width:100%;display:flex;align-items:flex-end;justify-content:center;gap:4px}.bar{width:24px;border-radius:5px 5px 0 0;position:relative;min-height:2px}.bar.red{background:var(--red)}.bar.navy{background:var(--navy)}.bar span{position:absolute;top:-17px;left:50%;transform:translateX(-50%);font-size:8px;font-weight:800;white-space:nowrap}.bar-label{font-size:8px;color:var(--muted);font-weight:800;position:absolute;bottom:-28px;white-space:nowrap;transform:rotate(-35deg);transform-origin:top center}.legend{display:flex;gap:15px;font-size:10px;color:var(--muted);margin-top:12px}.legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px}.legend .r{background:var(--red)}.legend .n{background:var(--navy)}.progress-wrap{margin:15px 0}.progress-top{display:flex;justify-content:space-between;font-size:11px;font-weight:800}.progress{height:13px;background:#e9edf1;border-radius:8px;overflow:hidden;margin-top:6px}.progress>div{height:100%;border-radius:8px}.exec{background:var(--red)}.hours{background:var(--navy)}.score{display:flex;align-items:center;gap:20px}.score-num{font-size:52px;font-weight:900;color:var(--red);line-height:1}.score-max{font-size:13px;color:var(--muted);font-weight:800}.stars{font-size:22px;letter-spacing:2px;color:#f0a51a}.metric-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font-size:12px}.metric-row:last-child{border-bottom:0}.metric-row b{font-size:13px}.callout{background:#f8fafb;border-left:5px solid var(--red);border-radius:8px;padding:12px 13px;margin-top:15px;font-size:12px;line-height:1.45}.tabs{display:flex;gap:8px;margin-bottom:12px}.tab{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 12px;font-size:11px;font-weight:900;cursor:pointer}.tab.active{background:var(--navy);color:#fff;border-color:var(--navy)}.table-tools{display:flex;justify-content:space-between;gap:10px;margin-bottom:10px;align-items:center}.search{border:1px solid var(--line);border-radius:8px;padding:9px 11px;width:300px;font-size:12px}select{border:1px solid var(--line);border-radius:8px;padding:9px 11px;font-size:12px;background:#fff;color:var(--navy)}.table-wrap{overflow:auto;max-height:650px}table{width:100%;border-collapse:collapse;font-size:10px}th{position:sticky;top:0;background:var(--navy);color:#fff;text-align:left;padding:10px 8px;font-size:9px;text-transform:uppercase;letter-spacing:.3px;cursor:pointer;z-index:1}td{padding:8px;border-bottom:1px solid var(--line);font-weight:600;white-space:nowrap}tr:hover td{background:#fafbfc}.badge{padding:4px 7px;border-radius:5px;font-size:9px;font-weight:900}.ok{background:#e4f6ee;color:#13724b}.warn{background:#fff1d8;color:#95650b}.bad{background:#ffe5e7;color:#b51d28}.footer{margin-top:18px;color:#8a949e;font-size:10px;display:flex;justify-content:space-between}.small-note{font-size:10px;color:var(--muted);line-height:1.4}.rank-list{display:flex;flex-direction:column;gap:6px}.rank-item{display:grid;grid-template-columns:22px 1fr 62px;gap:6px;align-items:center;font-size:9px}.rank-num{font-weight:900;color:var(--red)}.rank-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rank-bar{height:7px;background:#e9edf1;border-radius:5px;overflow:hidden;margin-top:4px}.rank-bar>div{height:100%;background:var(--navy)}.rank-val{text-align:right;font-weight:900}.hidden{display:none}.print-only{display:none}@media(max-width:1200px){.grid-kpi{grid-template-columns:repeat(4,1fr)}.grid2,.grid3{grid-template-columns:1fr}}@media(max-width:700px){.header{padding:24px}.wrap{padding:18px}.grid-kpi{grid-template-columns:repeat(2,1fr)}h1{font-size:28px}.period{right:24px}.search{width:190px}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--navy);font-family:Arial,Helvetica,sans-serif}.header{min-height:150px;background:#fff;position:relative;overflow:hidden;border-bottom:1px solid #e8ebef;padding:28px 44px 24px}.header:after{content:"";position:absolute;right:-30px;top:-100px;width:270px;height:310px;background:var(--red);transform:rotate(16deg);border-radius:24px}.header:before{content:"";position:absolute;right:105px;top:-95px;width:85px;height:300px;border:2px solid var(--red);transform:rotate(16deg);border-radius:20px}.brand{position:relative;z-index:2}.eyebrow{font-size:12px;letter-spacing:3px;font-weight:800;color:var(--red);text-transform:uppercase}h1{margin:4px 0 3px;font-size:38px;letter-spacing:-1.4px;font-weight:900}h1 span{color:var(--red)}.subtitle{font-size:14px;color:var(--muted);font-weight:600}.period{position:absolute;z-index:3;right:45px;bottom:24px;background:var(--navy);color:#fff;padding:9px 15px;border-radius:8px;font-size:12px;font-weight:800}.wrap{padding:24px 44px 44px;max-width:1700px;margin:auto}.grid-kpi{display:grid;grid-template-columns:repeat(8,1fr);gap:12px;margin-bottom:20px}.kpi{background:var(--card);border-radius:12px;padding:16px;box-shadow:var(--shadow);border-top:4px solid var(--red);min-height:112px}.kpi.dark{background:var(--navy);color:#fff}.kpi .label{font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:800;letter-spacing:.7px}.kpi.dark .label{color:#d8e1e9}.kpi .value{font-size:27px;font-weight:900;margin-top:7px;letter-spacing:-1px}.kpi .note{font-size:10px;color:var(--muted);margin-top:5px}.kpi.dark .note{color:#d8e1e9}.section-title{display:flex;align-items:center;gap:10px;margin:25px 0 12px;font-size:18px;font-weight:900;text-transform:uppercase}.section-title:before{content:"";width:7px;height:24px;background:var(--red);border-radius:3px}.grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px}.card{background:#fff;border-radius:14px;box-shadow:var(--shadow);padding:20px}.card-title{font-size:14px;font-weight:900;text-transform:uppercase;margin-bottom:4px}.card-sub{font-size:11px;color:var(--muted);margin-bottom:14px}.bar-chart{height:300px;display:flex;align-items:flex-end;gap:9px;padding:18px 8px 38px;border-bottom:1px solid var(--line);overflow:hidden}.bar-group{height:100%;flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;position:relative;min-width:35px}.bars{height:245px;width:100%;display:flex;align-items:flex-end;justify-content:center;gap:4px}.bar{width:24px;border-radius:5px 5px 0 0;position:relative;min-height:2px}.bar.red{background:var(--red)}.bar.navy{background:var(--navy)}.bar span{position:absolute;top:-17px;left:50%;transform:translateX(-50%);font-size:8px;font-weight:800;white-space:nowrap}.bar-label{font-size:8px;color:var(--muted);font-weight:800;position:absolute;bottom:-28px;white-space:nowrap;transform:rotate(-35deg);transform-origin:top center}.legend{display:flex;gap:15px;font-size:10px;color:var(--muted);margin-top:12px}.legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px}.legend .r{background:var(--red)}.legend .n{background:var(--navy)}.progress-wrap{margin:15px 0}.progress-top{display:flex;justify-content:space-between;font-size:11px;font-weight:800}.progress{height:13px;background:#e9edf1;border-radius:8px;overflow:hidden;margin-top:6px}.progress>div{height:100%;border-radius:8px}.exec{background:var(--red)}.hours{background:var(--navy)}.score{display:flex;align-items:center;gap:20px}.score-num{font-size:52px;font-weight:900;color:var(--red);line-height:1}.score-max{font-size:13px;color:var(--muted);font-weight:800}.stars{font-size:22px;letter-spacing:2px;color:#f0a51a}.metric-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font-size:12px}.metric-row:last-child{border-bottom:0}.metric-row b{font-size:13px}.callout{background:#f8fafb;border-left:5px solid var(--red);border-radius:8px;padding:12px 13px;margin-top:15px;font-size:12px;line-height:1.45}.tabs{display:flex;gap:8px;margin-bottom:12px}.tab{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 12px;font-size:11px;font-weight:900;cursor:pointer}.tab.active{background:var(--navy);color:#fff;border-color:var(--navy)}.table-tools{display:flex;justify-content:space-between;gap:10px;margin-bottom:10px;align-items:center}.search{border:1px solid var(--line);border-radius:8px;padding:9px 11px;width:300px;font-size:12px}select{border:1px solid var(--line);border-radius:8px;padding:9px 11px;font-size:12px;background:#fff;color:var(--navy)}.table-wrap{overflow:auto;max-height:650px}table{width:100%;border-collapse:collapse;font-size:10px}th{position:sticky;top:0;background:var(--navy);color:#fff;text-align:left;padding:10px 8px;font-size:9px;text-transform:uppercase;letter-spacing:.3px;cursor:pointer;z-index:1}td{padding:8px;border-bottom:1px solid var(--line);font-weight:600;white-space:nowrap}tr:hover td{background:#fafbfc}.badge{padding:4px 7px;border-radius:5px;font-size:9px;font-weight:900}.ok{background:#e4f6ee;color:#13724b}.warn{background:#fff1d8;color:#95650b}.bad{background:#ffe5e7;color:#b51d28}.footer{margin-top:18px;color:#8a949e;font-size:10px;display:flex;justify-content:space-between}.small-note{font-size:10px;color:var(--muted);line-height:1.4}.rank-list{display:flex;flex-direction:column;gap:9px}.rank-item{display:grid;grid-template-columns:30px 1fr 70px;gap:8px;align-items:center;font-size:10px}.rank-num{font-weight:900;color:var(--red)}.rank-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rank-bar{height:7px;background:#e9edf1;border-radius:5px;overflow:hidden;margin-top:4px}.rank-bar>div{height:100%;background:var(--navy)}.rank-val{text-align:right;font-weight:900}.hidden{display:none}@media(max-width:1200px){.grid-kpi{grid-template-columns:repeat(4,1fr)}.grid2,.grid3{grid-template-columns:1fr}}@media(max-width:700px){.header{padding:24px}.wrap{padding:18px}.grid-kpi{grid-template-columns:repeat(2,1fr)}h1{font-size:28px}.period{right:24px}.search{width:190px}}
 
 .topbar{display:flex;gap:14px;align-items:center;flex-wrap:wrap;background:#fff;border-radius:14px;box-shadow:var(--shadow);padding:14px 18px;margin-bottom:20px;position:sticky;top:8px;z-index:20}
 .topbar label{font-size:10px;font-weight:900;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px}
@@ -38,22 +38,15 @@
  .section-title{break-after:avoid;margin:14px 0 8px}
  .table-wrap{max-height:none!important;overflow:visible!important}
  th{position:static}thead{display:table-header-group}tr{break-inside:avoid}
-  .print-only{display:block}
-  .print-detail-block{break-inside:auto;margin-top:10px}
-  .print-detail-block h3{font-size:13px;margin:10px 0 5px;text-transform:uppercase}
-  .print-detail-block table{font-size:8px;margin-bottom:10px}
-  .print-detail-block th{padding:5px 4px}
-  .print-detail-block td{padding:4px}
-  .print-page-title{font-size:15px;font-weight:900;margin:12px 0 6px;padding-bottom:5px;border-bottom:2px solid var(--red)}
  .bar-chart{overflow:visible}
 }
 </style></head><body>
-<header class="header"><div class="brand"><div class="eyebrow">Resultados em campo • ColetorPRO</div><h1 id="ttl">EXECUÇÃO POR INDÚSTRIA <span>| Dashboard</span></h1><div class="subtitle" id="sub">Dashboard público • dados carregados automaticamente</div></div><div class="period" id="period">AGUARDANDO CSV</div></header>
+<header class="header"><div class="brand"><div class="eyebrow">Resultados em campo • ColetorPRO</div><h1 id="ttl">EXECUÇÃO POR INDÚSTRIA <span>| Dashboard</span></h1><div class="subtitle" id="sub">Dashboard público • dados carregados automaticamente</div></div><div class="period" id="period">CARREGANDO DADOS</div></header>
 <main class="wrap">
-<div class="topbar"><div class="combo"><label>Indústria (fornecedor)</label><input id="indIn" placeholder="— carregue o CSV —" autocomplete="off" disabled><div class="combo-list hidden" id="indList"></div></div>
+<div class="topbar"><div class="combo"><label>Indústria (fornecedor)</label><input id="indIn" placeholder="Carregando dados publicados..." autocomplete="off" disabled><div class="combo-list hidden" id="indList"></div></div>
 <div><button class="btn btn-pdf" id="pdfBtn" disabled onclick="exportPDF()">Exportar PDF</button></div>
-<input type="file" id="csv" accept=".csv,.txt" class="hidden"><div class="csvlink hidden" id="csvlink" onclick="csv.click()" title="Trocar arquivo CSV"></div></div>
-<div id="empty">Nenhum arquivo carregado.<br><br><button class="btn" onclick="csv.click()">Carregar CSV</button></div>
+</div>
+<div id="empty">Carregando dados publicados...</div>
 <div id="app" class="hidden">
 <div class="grid-kpi" id="kpis"></div>
 <div class="section-title">Visão operacional</div>
@@ -62,15 +55,9 @@
 <div class="section-title">Tempo de atendimento e qualidade</div>
 <div class="grid3"><section class="card"><div class="card-title">Tempo médio de atendimento</div><div class="card-sub">Por visita realizada</div><div class="score"><div><div class="score-num" id="at"></div><div class="score-max">por visita</div></div><div><div class="small-note">Menor atendimento</div><div class="score-num" style="font-size:32px" id="mt"></div><div class="score-max">minutos</div></div></div></section>
 <section class="card"><div class="card-title">Nota média do repositor</div><div class="card-sub">Escala máxima = 5,0</div><div class="score"><div class="score-num" id="as"></div><div><div class="stars">★★★★★</div><div class="small-note">média das avaliações registradas</div></div></div></section>
-<section class="card">
-<div class="card-title">Lojas por volume de horas</div>
-<div class="card-sub">Maior e menor volume de horas executadas</div>
-<div class="rank-list" id="rank"></div>
-<div class="mini-rank"><div class="mini-title">Lojas com menos horas</div><div class="rank-list" id="rankLow"></div></div>
-<div class="mini-rank"><div class="mini-title">Lojas sem visitas</div><div id="noVisits"></div></div>
-</section></div>
+<section class="card"><div class="card-title" id="rkTitle"></div><div class="card-sub" id="rkSub"></div><div class="rank-list" id="rank"></div></section></div>
 <div class="section-title">Detalhamento completo</div>
-<section class="card"><div class="tabs" id="tabs"></div><div class="table-tools"><div><div class="card-title" id="tbTitle"></div><div class="card-sub" id="tbSub"></div></div><input class="search" id="q" placeholder="Buscar..."></div><div class="table-wrap"><table id="tb"><thead></thead><tbody></tbody></table></div></section><div id="printDetails" class="print-only"></div>
+<section class="card"><div class="tabs" id="tabs"></div><div class="table-tools"><div><div class="card-title" id="tbTitle"></div><div class="card-sub" id="tbSub"></div></div><input class="search" id="q" placeholder="Buscar..."></div><div class="table-wrap"><table id="tb"><thead></thead><tbody></tbody></table></div></section>
 </div>
 <div class="footer"><span>Fonte: Relatório “Horas Contratadas x Executadas – Completo” • ColetorPRO</span><span id="upd"></span></div></main>
 <script>
@@ -161,52 +148,7 @@ $('indIn').addEventListener('keydown',e=>{const L=$('indList');
  else if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();const it=[...L.querySelectorAll('div[data-v]')];if(!it.length)return;let i=it.findIndex(x=>x.classList.contains('act'));it.forEach(x=>x.classList.remove('act'));i=e.key==='ArrowDown'?Math.min(it.length-1,i+1):Math.max(0,i-1);it[i].classList.add('act');it[i].scrollIntoView({block:'nearest'})}});
 $('indList').addEventListener('mousedown',e=>{const d=e.target.closest('div[data-v]');if(d){e.preventDefault();setInd(d.dataset.v)}});
 document.addEventListener('mousedown',e=>{if(!e.target.closest('.combo')&&!$('indList').classList.contains('hidden')){$('indList').classList.add('hidden');$('indIn').value=curInd==='__all__'?ALLTXT:curInd}});
-
-function tableHtmlForPrint(mode){
-  const rows=cur;
-  let data,cols,title;
-  const std=[
-    ['ag','Agendadas',x=>fI(x.ag)],['real','Realizadas',x=>fI(x.real)],
-    ['pct','Execução',x=>fP(x.pct)],['nc','Não comp.',x=>fI(x.nc)],
-    ['ea','Em andamento',x=>fI(x.ea)],['sc','Agendado',x=>fI(x.sc)],
-    ['contr','H. contratadas',x=>fH(x.contr)],['exec','H. executadas',x=>fH(x.exec)],
-    ['util','Util. horas',x=>x.util==null?'—':fP(x.util)],
-    ['avg','Tempo médio',x=>fH(x.avg)],['nota','Nota / 5',x=>fN(x.nota)]
-  ];
-  if(mode==='lojas'){
-    title='Lojas';
-    data=group(rows,'loja').sort((a,b)=>b.real-a.real);
-    cols=[['name','Loja',x=>esc(x.name)],['lojas','Qtd.',x=>x.lojas],...std];
-  }else if(mode==='prom'){
-    title='Promotores';
-    data=group(rows,'prom').sort((a,b)=>b.real-a.real);
-    cols=[['name','Promotor',x=>esc(x.name)],['lojas','Lojas',x=>x.lojas],...std];
-  }else{
-    title='Visitas';
-    data=rows.slice().sort((a,b)=>dkey(b.date)-dkey(a.date));
-    cols=[
-      ['date','Data',x=>esc(x.date)],['loja','Loja',x=>esc(x.loja)],
-      ['prom','Promotor',x=>esc(x.prom)],['comp','Comprador',x=>esc(x.comp||'—')],
-      ['status','Status',x=>esc(x.status)],['tempo','Tempo',x=>fH(x.tempo)],
-      ['nota','Nota',x=>x.nota?x.nota:'—']
-    ];
-  }
-  const head='<tr>'+cols.map(c=>`<th>${c[1]}</th>`).join('')+'</tr>';
-  const body=data.map(x=>'<tr>'+cols.map(c=>`<td>${c[2](x)}</td>`).join('')+'</tr>').join('');
-  return `<div class="print-detail-block"><h3>${title} <span style="font-weight:600;color:#6c7783">(${fI(data.length)})</span></h3><table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
-}
-
-function buildPrintDetails(){
-  const target=$('printDetails');
-  if(!target)return;
-  const label=curInd==='__all__'?'Geral':curInd;
-  target.innerHTML=`<div class="print-page-title">Detalhamento completo — ${esc(label)}</div>`+
-    tableHtmlForPrint('lojas')+
-    tableHtmlForPrint('prom')+
-    tableHtmlForPrint('visitas');
-}
-
-function exportPDF(){buildPrintDetails();const old=document.title;const nm=curInd==='__all__'?'Geral':curInd.split(' - ')[0].trim();document.title='ColetorPRO - '+nm+' - '+$('period').textContent;window.onafterprint=()=>{document.title=old;window.onafterprint=null};window.print();}
+function exportPDF(){const old=document.title;const nm=curInd==='__all__'?'Geral':curInd.split(' - ')[0].trim();document.title='ColetorPRO - '+nm+' - '+$('period').textContent;window.onafterprint=()=>{document.title=old;window.onafterprint=null};window.print();}
 async function loadPublishedData(){
  try{
   $('empty').innerHTML='Carregando dados publicados...';
@@ -217,14 +159,12 @@ async function loadPublishedData(){
   suppliers=[...new Set(ALL.map(r=>r.forn))].filter(Boolean).sort((a,b)=>a.localeCompare(b));
   const ds=ALL.map(r=>r.date).filter(Boolean).sort((a,b)=>dkey(a)<dkey(b)?-1:1);
   $('period').textContent=ds.length?ds[0]+' A '+ds[ds.length-1]:'SEM PERÍODO';
-  $('csvlink').classList.remove('hidden');
-  $('csvlink').textContent=fI(ALL.length)+' registros · '+suppliers.length+' indústrias';
   $('upd').textContent='Dados publicados em '+new Date().toLocaleDateString('pt-BR');
   $('indIn').disabled=false;$('pdfBtn').disabled=false;curInd='__all__';$('indIn').value=ALLTXT;
   $('empty').classList.add('hidden');$('app').classList.remove('hidden');render();
  }catch(err){
   console.error(err);
-  $('empty').innerHTML='Nenhum dado publicado ainda.<br><br>Envie um arquivo <b>dados.json</b> para este repositório no GitHub.';
+  $('empty').innerHTML='Nenhum dado publicado ainda.';
  }
 }
 loadPublishedData();
