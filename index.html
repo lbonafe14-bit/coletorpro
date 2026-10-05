@@ -47,10 +47,14 @@
  .bar-chart{overflow:visible}
  .pdf-detail{display:block!important}
  .pdf-detail .pdf-table-wrap{overflow:visible!important}
- .pdf-detail table{font-size:7px;table-layout:auto}
- .pdf-detail th{font-size:6.5px;padding:5px 4px;white-space:nowrap}
- .pdf-detail td{font-size:7px;padding:4px;white-space:nowrap}
- .pdf-detail .section-title{margin-top:16px}
+ .pdf-detail table{font-size:6.5px;table-layout:fixed}
+ .pdf-detail th{font-size:6px;padding:3px 3px;white-space:nowrap}
+ .pdf-detail td{font-size:6.5px;padding:2.5px 3px;white-space:nowrap}
+ .pdf-detail .section-title{margin-top:12px;page-break-before:always}
+ .pdf-detail .section-title:first-of-type{page-break-before:auto}
+ .pdf-detail .pdf-context{font-size:8px;margin-bottom:5px}
+ .pdf-detail .pdf-table-wrap{page-break-inside:auto}
+ .pdf-detail tr{page-break-inside:avoid}
 }
 .pdf-detail{display:none}
 .pdf-detail table{width:100%;border-collapse:collapse}
@@ -154,7 +158,7 @@ function render(){
  const mh=rankMode==='less'?(list[list.length-1]?.exec||1):(list[0]?.exec||1);
  $('rank').innerHTML=list.length?list.map((x,i)=>{
   const width=rankMode==='none'?100:x.exec/mh*100;
-  return `<div class="rank-item"><div class="rank-num">${i+1}</div><div><div class="rank-name" title="${esc(x.name)}">${esc(x.name)}</div><div class="rank-bar"><div style="width:${Math.max(width,2)}%"></div></div></div><div class="rank-val">${fH(x.exec)}</div></div>`;
+  return `<div class="rank-item"><div class="rank-num">${i+1}</div><div><div class="rank-name" title="${esc(x.name)}">${esc(x.name)}</div><div class="rank-bar"><div style="width:${Math.max(width,2)}%"></div></div></div><div class="rank-val">${rankMode==='none'?'0 visitas':fH(x.exec)}</div></div>`;
  }).join(''):`<div class="rank-empty">${rankMode==='none'?'Nenhuma loja sem visitas realizadas.':'Nenhum registro disponível.'}</div>`;
  $('rankSwitch').querySelectorAll('button').forEach(b=>b.onclick=()=>{
   window.rankMode=b.dataset.rank;
@@ -204,7 +208,7 @@ $('indIn').addEventListener('keydown',e=>{const L=$('indList');
 $('indList').addEventListener('click',e=>{const d=e.target.closest('div[data-v]');if(d)setInd(d.dataset.v);});
 document.addEventListener('click',e=>{if(!e.target.closest('.combo'))closeIndustryList();});
 function buildPdfTable(id,data,cols){const tb=$(id);tb.querySelector('thead').innerHTML='<tr>'+cols.map(c=>`<th>${c[1]}</th>`).join('')+'</tr>';tb.querySelector('tbody').innerHTML=data.map(x=>'<tr>'+cols.map(c=>`<td>${c[2](x)}</td>`).join('')+'</tr>').join('');}
-function buildPdfDetail(){const selectedIndustry=curInd;const rows=selectedIndustry==='__all__'?ALL.slice():ALL.filter(r=>r.forn===selectedIndustry);const std=[['ag','Agendadas',x=>fI(x.ag)],['real','Realizadas',x=>fI(x.real)],['pct','Execução',x=>fP(x.pct)],['nc','Não comp.',x=>fI(x.nc)],['ea','Em andamento',x=>fI(x.ea)],['sc','Agendado',x=>fI(x.sc)],['contr','H. contratadas',x=>fH(x.contr)],['exec','H. executadas',x=>fH(x.exec)],['util','Util. horas',x=>x.util==null?'—':fP(x.util)],['avg','Tempo médio',x=>fH(x.avg)],['min','Menor min.',x=>fMin(x.min)],['nota','Nota / 5',x=>fN(x.nota)]];const lojaData=group(rows,'loja').sort((a,b)=>b.real-a.real||a.name.localeCompare(b.name));const promData=group(rows,'prom').sort((a,b)=>b.real-a.real||a.name.localeCompare(b.name));buildPdfTable('pdfLojas',lojaData,[['name','Loja',x=>esc(x.name)],['lojas','Lojas',x=>x.lojas],...std]);buildPdfTable('pdfProm',promData,[['name','Promotor',x=>esc(x.name)],['lojas','Lojas',x=>x.lojas],...std]);const visitData=rows.slice().sort((a,b)=>dkey(a.date)-dkey(b.date)||a.loja.localeCompare(b.loja)||a.prom.localeCompare(b.prom));buildPdfTable('pdfVisitas',visitData,[['date','Data',x=>esc(x.date)],['loja','Loja',x=>esc(x.loja)],['prom','Promotor',x=>esc(x.prom)],['comp','Comprador',x=>esc(x.comp||'—')],['status','Status',x=>esc(x.status)],['tempo','Tempo',x=>fH(x.tempo)],['nota','Nota',x=>x.nota?x.nota:'—']]);$('pdfDetail').dataset.industry=selectedIndustry;$('pdfContext').textContent=(selectedIndustry==='__all__'?'Todas as indústrias — banco completo':'Indústria selecionada: '+selectedIndustry)+' • detalhamento completo da seleção';}
+function buildPdfDetail(){const selectedIndustry=curInd;const rows=selectedIndustry==='__all__'?ALL.slice():ALL.filter(r=>r.forn===selectedIndustry);const std=[['ag','Agendadas',x=>fI(x.ag)],['real','Realizadas',x=>fI(x.real)],['pct','Execução',x=>fP(x.pct)],['nc','Não comp.',x=>fI(x.nc)],['ea','Em andamento',x=>fI(x.ea)],['sc','Agendado',x=>fI(x.sc)],['contr','H. contratadas',x=>fH(x.contr)],['exec','H. executadas',x=>fH(x.exec)],['util','Util. horas',x=>x.util==null?'—':fP(x.util)],['avg','Tempo médio',x=>fH(x.avg)],['min','Menor min.',x=>fMin(x.min)],['nota','Nota / 5',x=>fN(x.nota)]];const lojaData=group(rows,'loja').sort((a,b)=>b.real-a.real||a.name.localeCompare(b.name));const promData=group(rows,'prom').sort((a,b)=>b.real-a.real||a.name.localeCompare(b.name));buildPdfTable('pdfLojas',lojaData,[['name','Loja',x=>esc(x.name)],['lojas','Lojas',x=>x.lojas],...std]);buildPdfTable('pdfProm',promData,[['name','Promotor',x=>esc(x.name)],['lojas','Lojas',x=>x.lojas],...std]);const visitData=rows.slice().sort((a,b)=>dkey(a.date)-dkey(b.date)||a.loja.localeCompare(b.loja)||a.prom.localeCompare(b.prom));buildPdfTable('pdfVisitas',visitData,[['date','Data',x=>esc(x.date)],['loja','Loja',x=>esc(x.loja)],['prom','Promotor',x=>esc(x.prom)],['comp','Comprador',x=>esc(x.comp||'—')],['status','Status',x=>esc(x.status)],['tempo','Tempo',x=>fH(x.tempo)],['nota','Nota',x=>x.nota?x.nota:'—']]);$('pdfDetail').dataset.industry=selectedIndustry;$('pdfContext').textContent=(selectedIndustry==='__all__'?'Todas as indústrias — banco completo':'Indústria selecionada: '+selectedIndustry)+' • detalhamento completo da seleção • '+fI(rows.length)+' visitas';}
 function exportPDF(){closeIndustryList();buildPdfDetail();const old=document.title;const nm=curInd==='__all__'?'Geral':curInd.split(' - ')[0].trim();document.title='ColetorPRO - '+nm+' - '+$('period').textContent;window.onafterprint=()=>{document.title=old;window.onafterprint=null};window.print();}
 async function loadPublishedData(){
  try{
