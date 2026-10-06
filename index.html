@@ -359,55 +359,61 @@ function exportHTML(){
   alert('Selecione uma indústria antes de baixar o HTML.');
   return;
  }
- // Exporta somente a indústria atual, mas mantém o JavaScript do dashboard
- // para que os botões continuem funcionando no arquivo baixado.
- const selectedRows=ALL.filter(r=>r.forn===curInd);
+ const selected=curInd;
+ const selectedRows=ALL.filter(r=>String(r.forn??'').trim()===String(selected).trim());
+ if(!selectedRows.length){alert('Nenhum dado encontrado para a indústria selecionada.');return;}
+
+ // Exporta o MESMO dashboard, com os mesmos scripts e componentes interativos,
+ // mas com os dados congelados somente na indústria escolhida.
+ const root=document.documentElement.cloneNode(true);
  const dataJson=JSON.stringify(selectedRows).replace(/</g,'\\u003c').replace(/>/g,'\\u003e').replace(/&/g,'\\u0026');
- const docClone=document.documentElement.cloneNode(true);
- const app=docClone.querySelector('#app');
- const empty=docClone.querySelector('#empty');
- const pdfDetail=docClone.querySelector('#pdfDetail');
- const indList=docClone.querySelector('#indList');
- const combo=docClone.querySelector('.combo');
- const exportBtn=docClone.querySelector('#pdfBtn');
- if(empty) empty.remove();
- if(pdfDetail) pdfDetail.remove();
- if(indList) indList.remove();
- // Remove somente o seletor e o botão de exportação do arquivo final.
- if(combo) combo.remove();
- if(exportBtn) exportBtn.remove();
- if(app) app.classList.remove('hidden');
- // NÃO desabilitar botões: rank/tabs/controles continuam interativos.
- const titleEl=docClone.querySelector('#ttl');
- const subEl=docClone.querySelector('#sub');
- if(titleEl) titleEl.innerHTML='INDÚSTRIA <span>| '+esc(curInd.length>48?curInd.slice(0,46)+'…':curInd)+'</span>';
- if(subEl) subEl.textContent=curInd+' • visão detalhada por loja, promotor e visita';
  const css=[...document.querySelectorAll('style')].map(x=>x.textContent).join('\n');
- const scripts=[...document.querySelectorAll('script')].map(x=>x.textContent).join('\n');
- // Substitui a inicialização original por uma inicialização com os dados filtrados.
- const safeData=dataJson;
- const init=`\n<script>window.__EXPORTED_DATA__=${safeData};<\/script>\n`;
- let js=scripts;
+ let scripts=[...document.querySelectorAll('script')].map(x=>x.textContent).join('\n');
+
+ // No arquivo exportado, não fazemos novo fetch de dados.json.
+ // O dashboard recebe somente os registros da indústria selecionada.
  const loadRe=/async function loadPublishedData\(\)\{[\s\S]*?\n\}\nloadPublishedData\(\);/;
- const replacement=`async function loadPublishedData(){\n try{\n  ALL=window.__EXPORTED_DATA__.slice();\n  suppliers=[...new Set(ALL.map(r=>r.forn))].filter(Boolean).sort((a,b)=>a.localeCompare(b));\n  const ds=ALL.map(r=>r.date).filter(Boolean).sort((a,b)=>dkey(a)<dkey(b)?-1:1);\n  $('period').textContent=ds.length?ds[0]+' A '+ds[ds.length-1]:'SEM PERÍODO';\n  $('indIn')?.remove();\n  $('empty')?.remove();\n  $('app').classList.remove('hidden');\n  curInd=ALL.length?ALL[0].forn:'__all__';\n  render();\n }catch(err){console.error(err);}\n}\nloadPublishedData();`;
- js=js.replace(loadRe,replacement);
- // No arquivo exportado o seletor de indústria foi removido. Remova os listeners
- // que dependem dele para que eles não interrompam a execução dos demais botões.
- js=js.replace(/\$\('indIn'\)\.addEventListener\([\s\S]*?\n\$\('indList'\)\.addEventListener\([\s\S]*?\n\},[\s\S]*?\);\n/, '');
- js=js.replace(/document\.addEventListener\('click',[\s\S]*?\);\n/, '');
- // Garante que a busca/tabela continue funcional no arquivo exportado.
- js=js.replace(/\$\('q'\)\.addEventListener\('input',renderTable\);/, "if($('q')) $('q').addEventListener('input',renderTable);");
- const header=docClone.querySelector('header')?.outerHTML||'';
- const main=docClone.querySelector('main')?.outerHTML||'';
- const html='<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ColetorPRO - '+curInd.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</title><style>'+css+'\nbody{background:#f4f6f8!important}.topbar{min-height:0}.pdf-detail{display:none!important}.combo{display:none!important}</style></head><body>'+header+main+init+'<script>'+js.replace(/<\\\/script>/gi,'<\\/script>')+'<\/script></body></html>';
+ const replacement=`async function loadPublishedData(){
+ try{
+  ALL=window.__EXPORTED_DATA__.slice();
+  suppliers=[...new Set(ALL.map(r=>r.forn)).filter(Boolean)].sort((a,b)=>a.localeCompare(b));
+  const ds=ALL.map(r=>r.date).filter(Boolean).sort((a,b)=>dkey(a)<dkey(b)?-1:1);
+  $('period').textContent=ds.length?ds[0]+' A '+ds[ds.length-1]:'SEM PERÍODO';
+  $('upd').textContent='Dados exportados em '+new Date().toLocaleDateString('pt-BR');
+  $('empty').classList.add('hidden');
+  $('app').classList.remove('hidden');
+  curInd=ALL.length?ALL[0].forn:'__all__';
+  $('indIn').value=curInd;
+  $('indIn').disabled=true;
+  $('pdfBtn').style.display='none';
+  render();
+ }catch(err){console.error(err);}
+}
+loadPublishedData();`;
+ if(!loadRe.test(scripts)){
+  alert('Não foi possível preparar a exportação.');
+  return;
+ }
+ scripts=scripts.replace(loadRe,replacement);
+
+ // Mantém todos os elementos no DOM para que nenhum evento dos componentes
+ // fique sem referência. Apenas esconde os controles que não devem ser usados
+ // no arquivo exportado.
+ const extraStyle=`
+.exported-lock{display:none!important}
+`;
+ const init=`<script>window.__EXPORTED_DATA__=${dataJson};<\/script>`;
+ const titleSafe=selected.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+ const html='<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ColetorPRO - '+titleSafe+'</title><style>'+css+extraStyle+'</style></head><body>'+root.querySelector('header').outerHTML+root.querySelector('main').outerHTML+init+'<script>'+scripts.replace(/<\\\/script>/gi,'<\\/script>')+'<\/script></body></html>';
  const blob=new Blob([html],{type:'text/html;charset=utf-8'});
  const url=URL.createObjectURL(blob);
  const a=document.createElement('a');
- const safe=curInd.replace(/[^a-z0-9À-ÿ]+/gi,'_').replace(/^_+|_+$/g,'');
+ const safe=selected.replace(/[^a-z0-9À-ÿ]+/gi,'_').replace(/^_+|_+$/g,'');
  a.href=url;a.download='ColetorPRO - '+safe+'.html';
  document.body.appendChild(a);a.click();a.remove();
- setTimeout(()=>URL.revokeObjectURL(url),1000);
+ setTimeout(()=>URL.revokeObjectURL(url),2000);
 }
+
 
 async function loadPublishedData(){
  try{
