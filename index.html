@@ -92,8 +92,25 @@ body{background:#fff!important}
 .pdf-rank th,.pdf-rank td{font-size:5.6px!important;padding:1.6px 2.5px!important}
 .pdf-rank th.gs,.pdf-rank td.gs{border-left:1.5px solid #9aa6b2!important}
 .pdf-rank td:first-child,.pdf-rank td.gs{color:var(--muted)}
+.pdf-op{display:grid;grid-template-columns:1.7fr 1fr;gap:8px;margin-bottom:6px}
+.pdf-op>div{border:1px solid var(--line);padding:6px;break-inside:avoid}
+.pdf-chart-title{font-size:8px;font-weight:900;text-transform:uppercase;margin-bottom:5px;color:var(--navy)}
+.pdf-vchart{display:flex;align-items:flex-end;gap:2px;height:118px;border-bottom:1px solid var(--line)}
+.pdf-vchart .g{flex:1;min-width:0;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center}
+.pdf-vchart .bs{display:flex;align-items:flex-end;justify-content:center;gap:1px;width:100%;height:88px}
+.pdf-vchart .b{flex:1;max-width:9px;position:relative;min-height:1px}
+.pdf-vchart .b i{position:absolute;top:-7px;left:50%;transform:translateX(-50%);font-style:normal;font-size:5px;font-weight:800;color:var(--navy)}
+.pdf-vchart .lb{height:26px;font-size:5px;color:var(--muted);font-weight:800;writing-mode:vertical-rl;padding-top:2px}
+.pdf-legend{display:flex;gap:10px;font-size:6.5px;color:var(--muted);margin:2px 0 4px;font-weight:700}
+.pdf-legend i{display:inline-block;width:6px;height:6px;margin-right:3px;border-radius:1px}
+.n{background:var(--navy)!important}.r{background:var(--red)!important}
+.pdf-prog{margin:5px 0 7px}.pdf-prog .t{display:flex;justify-content:space-between;font-size:7px;font-weight:900}
+.pdf-prog .pb{height:6px;background:#e9edf1;border-radius:3px;overflow:hidden;margin-top:2px}.pdf-prog .pb>div{height:100%}
+.pdf-m{display:flex;justify-content:space-between;font-size:7px;padding:2.2px 0;border-bottom:1px solid var(--line)}
+.hb{height:3px;border-radius:1px;margin:.6px 0}
 .pdf-detail thead{display:table-header-group!important}
 }
+.pdf-hchart-wrap{width:100%;overflow:visible;margin-bottom:8px}.pdf-hchart{display:flex;align-items:flex-end;gap:8px;min-height:180px;padding:12px 8px 42px;border-bottom:1px solid var(--line);overflow-x:auto;overflow-y:visible}.pdf-hchart .g{flex:0 0 76px;height:150px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;position:relative}.pdf-hchart .bs{height:112px;width:100%;display:flex;align-items:flex-end;justify-content:center;gap:3px}.pdf-hchart .b{width:18px;max-width:18px;min-height:2px;border-radius:3px 3px 0 0;position:relative}.pdf-hchart .b i{position:absolute;top:-13px;left:50%;transform:translateX(-50%);font-style:normal;font-size:6px;font-weight:900;white-space:nowrap;color:var(--navy)}.pdf-hchart .lb{position:absolute;bottom:-38px;width:72px;text-align:center;font-size:6px;line-height:1.1;color:var(--muted);font-weight:800;overflow-wrap:anywhere;word-break:break-word}.pdf-hchart.empty{min-height:45px;padding:12px;text-align:center;color:var(--muted);font-size:8px}@media print{.pdf-hchart-wrap{break-inside:avoid}.pdf-hchart{min-height:145px;height:155px;overflow:visible!important;padding-bottom:38px}.pdf-hchart .g{flex:1 1 0;min-width:35px;max-width:95px;height:125px}.pdf-hchart .bs{height:92px}.pdf-hchart .b{width:12px;max-width:12px}.pdf-hchart .lb{bottom:-34px;width:88px;font-size:5.5px}.pdf-hchart .b i{font-size:5px}}
 </style>
 </head><body>
 <header class="header"><div class="brand"><div class="eyebrow">Resultados em campo • ColetorPRO</div><h1 id="ttl">EXECUÇÃO POR INDÚSTRIA <span>| Dashboard</span></h1><div class="subtitle" id="sub">Dashboard público • dados carregados automaticamente</div></div><div class="period" id="period">CARREGANDO DADOS</div></header>
@@ -118,9 +135,14 @@ body{background:#fff!important}
 <div class="pdf-report-head"><div class="pdf-report-kicker">COLETORPRO • RELATÓRIO COMPLETO</div><div class="pdf-report-title" id="pdfTitle">Execução por indústria</div><div class="card-sub pdf-context" id="pdfContext"></div></div>
 <div class="section-title">Resumo da indústria</div>
 <div class="pdf-summary" id="pdfSummary"></div>
+<div class="section-title">Visão operacional</div>
+<div class="pdf-op"><div><div class="pdf-chart-title">Visitas por dia — agendadas x realizadas</div><div class="pdf-vchart" id="pdfDayChart"></div><div class="pdf-legend"><span><i class="n"></i>Agendadas</span><span><i class="r"></i>Realizadas</span></div></div><div id="pdfOpSide"></div></div>
+<div class="section-title" id="pdfIndChartTitle">Visitas por indústria</div><div class="pdf-legend"><span><i class="n"></i>Agendadas</span><span><i class="r"></i>Realizadas</span></div><div class="pdf-hchart-wrap"><div class="pdf-hchart" id="pdfIndChart"></div></div>
+<div class="section-title" id="pdfStoreTitle">Visitas por loja</div><div class="pdf-legend"><span><i class="n"></i>Agendadas</span><span><i class="r"></i>Realizadas</span></div><div class="pdf-hchart-wrap"><div class="pdf-hchart" id="pdfStoreChart"></div></div>
 <div class="section-title" id="pdfMoreTitle">Mais horas</div><div class="pdf-table-wrap"><table id="pdfRankMore" class="pdf-rank"><thead></thead><tbody></tbody></table></div>
 <div class="section-title" id="pdfLessTitle">Menos horas</div><div class="pdf-table-wrap"><table id="pdfRankLess" class="pdf-rank"><thead></thead><tbody></tbody></table></div>
 <div class="section-title" id="pdfNoneTitle">Sem visitas</div><div class="pdf-table-wrap"><table id="pdfRankNone" class="pdf-rank"><thead></thead><tbody></tbody></table></div>
+<div class="section-title" id="pdfIndTitle">Detalhamento completo — Indústrias</div><div class="pdf-table-wrap" id="pdfIndWrap"><table id="pdfInd"><thead></thead><tbody></tbody></table></div>
 <div class="section-title">Detalhamento completo — Lojas</div><div class="pdf-table-wrap"><table id="pdfLojas"><thead></thead><tbody></tbody></table></div>
 <div class="section-title">Detalhamento completo — Promotores</div><div class="pdf-table-wrap"><table id="pdfProm"><thead></thead><tbody></tbody></table></div>
 <div class="section-title">Detalhamento completo — Visitas</div><div class="pdf-table-wrap"><table id="pdfVisitas"><thead></thead><tbody></tbody></table></div>
@@ -270,11 +292,12 @@ function buildPdfDetail(){
  $('pdfContext').textContent=(all?'Todas as indústrias — banco completo':'Indústria selecionada: '+selectedIndustry)+' • '+fI(rows.length)+' visitas';
  const summary=[['Visitas agendadas',fI(O.ag),'programadas'],['Visitas realizadas',fI(O.real),fP(O.pct)+' de execução'],['Horas contratadas',fH(O.contr),'base registrada'],['Horas executadas',fH(O.exec),O.util==null?'sem horas contratadas':fP(O.util)+' das contratadas'],['Tempo médio',fH(O.avg),'por visita realizada'],['Nota média',fN(O.nota),'escala máxima 5,0'],['Não compareceu',fI(O.nc),'visitas'],['Em andamento',fI(O.ea),'visitas'],['Agendado (a realizar)',fI(O.sc),'visitas'],['Gap de visitas',fI(O.real-O.ag),'realizadas − agendadas'],['Gap de horas',fH(O.exec-O.contr),'executadas − contratadas'],['Menor atendimento',fMin(O.min),'entre realizadas']];
  $('pdfSummary').innerHTML=summary.map(x=>`<div class="pdf-summary-item"><div class="label">${x[0]}</div><div class="value">${x[1]}</div><div class="note">${x[2]}</div></div>`).join('');
+
  const byName=(a,b)=>a.name.localeCompare(b.name);
  const rankBase=all?group(rows,'forn'):group(rows,'loja');
  const noneBase=all?group(rows,r=>r.loja+' — '+r.forn):rankBase;
  const moreL=[...rankBase].sort((a,b)=>b.exec-a.exec||byName(a,b));
- const lessL=rankBase.filter(x=>x.real>0).sort((a,b)=>a.exec-b.exec||byName(a,b));
+ const lessL=rankBase.filter(x=>x.exec>0).sort((a,b)=>a.exec-b.exec||byName(a,b));
  const noneL=noneBase.filter(x=>x.real===0).sort(byName);
  const nm=all?'Indústria':'Loja';
  const rankCols=[['name',nm,x=>esc(x.name)],['ag','Agend.',x=>fI(x.ag)],['real','Realiz.',x=>fI(x.real)],['contr','H. contrat.',x=>fH(x.contr)],['exec','H. exec.',x=>fH(x.exec)],['util','Util. horas',x=>x.util==null?'—':fP(x.util)]];
@@ -285,7 +308,39 @@ function buildPdfDetail(){
  const pl=all?'Indústrias':'Lojas';
  $('pdfMoreTitle').textContent=pl+' — mais horas executadas ('+fI(moreL.length)+')';
  $('pdfLessTitle').textContent=pl+' — menos horas executadas ('+fI(lessL.length)+')';
- $('pdfNoneTitle').textContent=(all?'Lojas':'Lojas')+' — sem visitas realizadas ('+fI(noneL.length)+')';
+ $('pdfNoneTitle').textContent='Lojas — sem visitas realizadas ('+fI(noneL.length)+')';
+
+ // Gráfico por dia — mesmo conceito visual do dashboard
+ const days=group(rows,'date').filter(g=>g.name).sort((a,b)=>dkey(a.name)<dkey(b.name)?-1:1);
+ const mxOf=a=>Math.max(1,...a.map(x=>Math.max(x.ag,x.real)));
+ const dmx=mxOf(days),showV=days.length<=31;
+ $('pdfDayChart').innerHTML=days.length?days.map(x=>`<div class="g"><div class="bs"><div class="b n" style="height:${Math.max(x.ag/dmx*84,2)}px"><i>${showV?x.ag:''}</i></div><div class="b r" style="height:${Math.max(x.real/dmx*84,2)}px"><i>${showV?x.real:''}</i></div></div><div class="lb" title="${esc(x.name)}">${esc(x.name.slice(0,5))}</div></div>`).join(''):'<div class="rank-empty">Nenhum dado por dia.</div>';
+
+ // Aproveitamento
+ const prog=(l,p,c)=>`<div class="pdf-prog"><div class="t"><span>${l}</span><span>${p==null?'—':fP(p)}</span></div><div class="pb"><div style="width:${Math.min(p||0,100)}%;background:${c}"></div></div></div>`;
+ const mrow=(l,v)=>`<div class="pdf-m"><span>${l}</span><b>${v}</b></div>`;
+ $('pdfOpSide').innerHTML='<div class="pdf-chart-title">Aproveitamento da operação</div>'+prog('Visitas realizadas',O.pct,'#e30613')+prog('Horas executadas',O.util,'#0b2742')+mrow('Gap de visitas',fI(O.real-O.ag)+' visitas')+mrow('Gap de horas',fH(O.exec-O.contr))+mrow('Não compareceu',fI(O.nc))+mrow('Em andamento',fI(O.ea))+mrow('Agendado (a realizar)',fI(O.sc))+mrow('Tempo médio por visita',fH(O.avg))+mrow('Menor atendimento',fMin(O.min))+mrow('Nota média do repositor',fN(O.nota)+' / 5');
+
+ // Gráfico por loja — mesmo formato do dashboard, com as 20 maiores lojas
+ const sg=group(rows,'loja').sort((a,b)=>b.real-a.real||b.ag-a.ag||byName(a,b)).slice(0,20);
+ const smx=mxOf(sg);
+ $('pdfStoreTitle').textContent='Visitas por loja — top 20 ('+fI(sg.length)+')';
+ $('pdfStoreChart').innerHTML=sg.length?sg.map(x=>`<div class="g"><div class="bs"><div class="b n" style="height:${Math.max(x.ag/smx*84,2)}px"><i>${x.ag}</i></div><div class="b r" style="height:${Math.max(x.real/smx*84,2)}px"><i>${x.real}</i></div></div><div class="lb" title="${esc(x.name)}">${esc(x.name)}</div></div>`).join(''):'<div class="rank-empty">Nenhuma loja encontrada.</div>';
+
+ // Gráfico por indústria — sempre completo, independentemente da indústria selecionada
+ const industryRows=ALL.slice();
+ const ig=group(industryRows,'forn').sort((a,b)=>b.real-a.real||b.ag-a.ag||byName(a,b));
+ const igTop=ig.slice(0,12), imx=mxOf(igTop);
+ $('pdfIndChartTitle').textContent='Visitas por indústria — top 12 ('+fI(ig.length)+' no total)';
+ $('pdfIndChart').innerHTML=igTop.length?igTop.map(x=>`<div class="g"><div class="bs"><div class="b n" style="height:${Math.max(x.ag/imx*84,2)}px"><i>${x.ag}</i></div><div class="b r" style="height:${Math.max(x.real/imx*84,2)}px"><i>${x.real}</i></div></div><div class="lb" title="${esc(x.name)}">${esc(x.name)}</div></div>`).join(''):'<div class="rank-empty">Nenhuma indústria encontrada.</div>';
+
+ // Tabela completa por indústria — TODAS as indústrias e TODAS as métricas
+ const igAll=ig;
+ $('pdfIndChartWrap').style.display='';
+ $('pdfIndWrap').style.display='';
+ $('pdfIndTitle').textContent='Detalhamento completo — Indústrias ('+fI(igAll.length)+')';
+ buildPdfTable('pdfInd',igAll,[['name','Indústria',x=>esc(x.name)],['lojas','Qtd. lojas',x=>x.lojas],...std]);
+
  const lojaData=group(rows,'loja').sort((a,b)=>b.real-a.real||a.name.localeCompare(b.name));
  const promData=group(rows,'prom').sort((a,b)=>b.real-a.real||a.name.localeCompare(b.name));
  buildPdfTable('pdfLojas',lojaData,[['name','Loja',x=>esc(x.name)],['lojas','Qtd. lojas',x=>x.lojas],...std]);
@@ -294,6 +349,7 @@ function buildPdfDetail(){
  buildPdfTable('pdfVisitas',visitData,[['date','Data',x=>esc(x.date)],['loja','Loja',x=>esc(x.loja)],['prom','Promotor',x=>esc(x.prom)],['comp','Comprador',x=>esc(x.comp||'—')],['status','Status',x=>esc(x.status)],['tempo','Tempo',x=>fH(x.tempo)],['nota','Nota',x=>x.nota?x.nota:'—']]);
  $('pdfDetail').dataset.industry=selectedIndustry;
 }
+
 function exportPDF(){
  closeIndustryList();
  buildPdfDetail();
