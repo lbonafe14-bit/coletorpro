@@ -49,9 +49,9 @@
  .bar-chart{overflow:visible}
  .pdf-detail{display:block!important}
  .pdf-detail .pdf-table-wrap{overflow:visible!important}
- .pdf-detail table{font-size:6.5px;table-layout:fixed}
+ .pdf-detail table{font-size:6.5px;table-layout:auto;max-width:100%}
  .pdf-detail th{font-size:6px;padding:3px 3px;white-space:nowrap}
- .pdf-detail td{font-size:6.5px;padding:2.5px 3px;white-space:nowrap}
+ .pdf-detail td{font-size:6.5px;padding:2.5px 3px;white-space:nowrap}.pdf-detail td:first-child,.pdf-detail th:first-child{white-space:normal;overflow-wrap:anywhere;word-break:break-word}
  .pdf-detail .section-title{margin-top:12px;page-break-before:always}
  .pdf-detail .section-title:first-of-type{page-break-before:auto}
  .pdf-detail .pdf-context{font-size:8px;margin-bottom:5px}
@@ -272,7 +272,7 @@ $('indList').addEventListener('click',e=>{const d=e.target.closest('div[data-v]'
 document.addEventListener('click',e=>{if(!e.target.closest('.combo'))closeIndustryList();});
 function buildPdfTable(id,data,cols){const tb=$(id);tb.querySelector('thead').innerHTML='<tr>'+cols.map(c=>`<th>${c[1]}</th>`).join('')+'</tr>';tb.querySelector('tbody').innerHTML=data.map(x=>'<tr>'+cols.map(c=>`<td>${c[2](x)}</td>`).join('')+'</tr>').join('');}
 function buildPdfRank(id,data,cols){
- const tb=$(id),n=data.length,G=n<=6?1:n<=14?2:3;
+ const tb=$(id),n=data.length,G=1;
  if(!n){tb.querySelector('thead').innerHTML='';tb.querySelector('tbody').innerHTML='<tr><td style="text-align:center">Nenhum registro.</td></tr>';return}
  const per=Math.ceil(n/G);let th='<tr>',body='';
  for(let g=0;g<G;g++)th+=`<th class="${g?'gs':''}">#</th>`+cols.map(c=>`<th>${c[1]}</th>`).join('');
@@ -282,81 +282,100 @@ function buildPdfRank(id,data,cols){
   body+='</tr>';}
  tb.querySelector('thead').innerHTML=th+'</tr>';tb.querySelector('tbody').innerHTML=body;
 }
-function buildPdfDetail(){
- const selectedIndustry=curInd;
- const rows=selectedIndustry==='__all__'?ALL.slice():ALL.filter(r=>r.forn===selectedIndustry);
+function buildPdfDetail(selectedIndustryOverride){
+ const selectedIndustry=(selectedIndustryOverride||curInd||'').trim();
+ if(!selectedIndustry || selectedIndustry==='__all__'){
+  throw new Error('Selecione uma indústria antes de exportar o PDF.');
+ }
+ const norm=v=>String(v??'').trim().toLocaleLowerCase('pt-BR');
+ const target=norm(selectedIndustry);
+ const rows=ALL.filter(r=>norm(r.forn)===target).map(r=>({...r}));
+ if(!rows.length){
+  throw new Error('Nenhum registro encontrado para a indústria selecionada.');
+ }
  const O=agg(rows);
- const all=selectedIndustry==='__all__';
  const std=[['ag','Agendadas',x=>fI(x.ag)],['real','Realizadas',x=>fI(x.real)],['pct','Execução',x=>fP(x.pct)],['nc','Não compareceu',x=>fI(x.nc)],['ea','Em andamento',x=>fI(x.ea)],['sc','Agendado (a realizar)',x=>fI(x.sc)],['contr','Horas contratadas',x=>fH(x.contr)],['exec','Horas executadas',x=>fH(x.exec)],['util','Utilização das horas',x=>x.util==null?'—':fP(x.util)],['avg','Tempo médio',x=>fH(x.avg)],['min','Menor atendimento',x=>fMin(x.min)],['nota','Nota / 5',x=>fN(x.nota)]];
- $('pdfTitle').textContent=all?'Execução geral — relatório completo':'Indústria — '+selectedIndustry;
- $('pdfContext').textContent=(all?'Todas as indústrias — banco completo':'Indústria selecionada: '+selectedIndustry)+' • '+fI(rows.length)+' visitas';
+ $('pdfTitle').textContent='Indústria — '+selectedIndustry;
+ $('pdfContext').textContent='Somente a indústria selecionada: '+selectedIndustry+' • '+fI(rows.length)+' visitas';
  const summary=[['Visitas agendadas',fI(O.ag),'programadas'],['Visitas realizadas',fI(O.real),fP(O.pct)+' de execução'],['Horas contratadas',fH(O.contr),'base registrada'],['Horas executadas',fH(O.exec),O.util==null?'sem horas contratadas':fP(O.util)+' das contratadas'],['Tempo médio',fH(O.avg),'por visita realizada'],['Nota média',fN(O.nota),'escala máxima 5,0'],['Não compareceu',fI(O.nc),'visitas'],['Em andamento',fI(O.ea),'visitas'],['Agendado (a realizar)',fI(O.sc),'visitas'],['Gap de visitas',fI(O.real-O.ag),'realizadas − agendadas'],['Gap de horas',fH(O.exec-O.contr),'executadas − contratadas'],['Menor atendimento',fMin(O.min),'entre realizadas']];
  $('pdfSummary').innerHTML=summary.map(x=>`<div class="pdf-summary-item"><div class="label">${x[0]}</div><div class="value">${x[1]}</div><div class="note">${x[2]}</div></div>`).join('');
 
- const byName=(a,b)=>a.name.localeCompare(b.name);
- const rankBase=all?group(rows,'forn'):group(rows,'loja');
- const noneBase=all?group(rows,r=>r.loja+' — '+r.forn):rankBase;
+ const byName=(a,b)=>a.name.localeCompare(b.name,'pt-BR');
+ const rankBase=group(rows,'loja');
+ const noneBase=rankBase;
  const moreL=[...rankBase].sort((a,b)=>b.exec-a.exec||byName(a,b));
- const lessL=rankBase.filter(x=>x.exec>0).sort((a,b)=>a.exec-b.exec||byName(a,b));
- const noneL=noneBase.filter(x=>x.real===0).sort(byName);
- const nm=all?'Indústria':'Loja';
- const rankCols=[['name',nm,x=>esc(x.name)],['ag','Agend.',x=>fI(x.ag)],['real','Realiz.',x=>fI(x.real)],['contr','H. contrat.',x=>fH(x.contr)],['exec','H. exec.',x=>fH(x.exec)],['util','Util. horas',x=>x.util==null?'—':fP(x.util)]];
- const rankNoneCols=[['name',all?'Loja — Indústria':'Loja',x=>esc(x.name)],['ag','Agend.',x=>fI(x.ag)],['nc','Não comp.',x=>fI(x.nc)],['ea','Em and.',x=>fI(x.ea)],['sc','A realizar',x=>fI(x.sc)]];
+ const lessL=[...rankBase].filter(x=>x.exec>0).sort((a,b)=>a.exec-b.exec||byName(a,b));
+ const noneL=[...noneBase].filter(x=>x.real===0).sort(byName);
+ const rankCols=[['name','Loja',x=>esc(x.name)],['ag','Agend.',x=>fI(x.ag)],['real','Realiz.',x=>fI(x.real)],['contr','H. contrat.',x=>fH(x.contr)],['exec','H. exec.',x=>fH(x.exec)],['util','Util. horas',x=>x.util==null?'—':fP(x.util)]];
+ const rankNoneCols=[['name','Loja',x=>esc(x.name)],['ag','Agend.',x=>fI(x.ag)],['nc','Não comp.',x=>fI(x.nc)],['ea','Em and.',x=>fI(x.ea)],['sc','A realizar',x=>fI(x.sc)]];
  buildPdfRank('pdfRankMore',moreL,rankCols);
  buildPdfRank('pdfRankLess',lessL,rankCols);
  buildPdfRank('pdfRankNone',noneL,rankNoneCols);
- const pl=all?'Indústrias':'Lojas';
- $('pdfMoreTitle').textContent=pl+' — mais horas executadas ('+fI(moreL.length)+')';
- $('pdfLessTitle').textContent=pl+' — menos horas executadas ('+fI(lessL.length)+')';
+ $('pdfMoreTitle').textContent='Lojas — mais horas executadas ('+fI(moreL.length)+')';
+ $('pdfLessTitle').textContent='Lojas — menos horas executadas ('+fI(lessL.length)+')';
  $('pdfNoneTitle').textContent='Lojas — sem visitas realizadas ('+fI(noneL.length)+')';
 
- // Gráfico por dia — mesmo conceito visual do dashboard
+ // Visitas por dia — somente a indústria selecionada.
  const days=group(rows,'date').filter(g=>g.name).sort((a,b)=>dkey(a.name)<dkey(b.name)?-1:1);
  const mxOf=a=>Math.max(1,...a.map(x=>Math.max(x.ag,x.real)));
  const dmx=mxOf(days),showV=days.length<=31;
  $('pdfDayChart').innerHTML=days.length?days.map(x=>`<div class="g"><div class="bs"><div class="b n" style="height:${Math.max(x.ag/dmx*84,2)}px"><i>${showV?x.ag:''}</i></div><div class="b r" style="height:${Math.max(x.real/dmx*84,2)}px"><i>${showV?x.real:''}</i></div></div><div class="lb" title="${esc(x.name)}">${esc(x.name.slice(0,5))}</div></div>`).join(''):'<div class="rank-empty">Nenhum dado por dia.</div>';
 
- // Aproveitamento
+ // Aproveitamento — somente a indústria selecionada.
  const prog=(l,p,c)=>`<div class="pdf-prog"><div class="t"><span>${l}</span><span>${p==null?'—':fP(p)}</span></div><div class="pb"><div style="width:${Math.min(p||0,100)}%;background:${c}"></div></div></div>`;
  const mrow=(l,v)=>`<div class="pdf-m"><span>${l}</span><b>${v}</b></div>`;
  $('pdfOpSide').innerHTML='<div class="pdf-chart-title">Aproveitamento da operação</div>'+prog('Visitas realizadas',O.pct,'#e30613')+prog('Horas executadas',O.util,'#0b2742')+mrow('Gap de visitas',fI(O.real-O.ag)+' visitas')+mrow('Gap de horas',fH(O.exec-O.contr))+mrow('Não compareceu',fI(O.nc))+mrow('Em andamento',fI(O.ea))+mrow('Agendado (a realizar)',fI(O.sc))+mrow('Tempo médio por visita',fH(O.avg))+mrow('Menor atendimento',fMin(O.min))+mrow('Nota média do repositor',fN(O.nota)+' / 5');
 
- // Gráfico por loja — SOMENTE lojas da indústria selecionada.
- // Usa barras horizontais para que o nome completo nunca seja cortado.
+ // Visitas por loja — somente lojas pertencentes à indústria selecionada.
  const sg=group(rows,'loja').sort((a,b)=>b.real-a.real||b.ag-a.ag||byName(a,b));
  const smx=mxOf(sg);
- $('pdfStoreTitle').textContent='Visitas por loja ('+fI(sg.length)+')';
+ $('pdfStoreTitle').textContent='Visitas por loja — '+fI(sg.length)+' lojas';
  $('pdfStoreChart').innerHTML=sg.length?sg.map(x=>`<div class="pdf-hrow"><div class="pdf-hname" title="${esc(x.name)}">${esc(x.name)}</div><div class="pdf-hbars"><div class="pdf-hbar-line"><span class="pdf-hbar-label">Ag.</span><div class="pdf-hbar-track"><div class="pdf-hbar n" style="width:${Math.max(x.ag/smx*100,x.ag?1:0)}%"></div></div><b>${x.ag}</b></div><div class="pdf-hbar-line"><span class="pdf-hbar-label">Real.</span><div class="pdf-hbar-track"><div class="pdf-hbar r" style="width:${Math.max(x.real/smx*100,x.real?1:0)}%"></div></div><b>${x.real}</b></div></div></div>`).join(''):'<div class="rank-empty">Nenhuma loja encontrada.</div>';
 
- // Gráfico por indústria — SOMENTE a indústria selecionada.
- const ig=group(rows,'forn').sort((a,b)=>b.real-a.real||b.ag-a.ag||byName(a,b));
+ // Visitas por indústria — somente a indústria selecionada (uma única linha).
+ const ig=group(rows,'forn');
  const imx=mxOf(ig);
  $('pdfIndChartTitle').textContent='Visitas por indústria — selecionada';
  $('pdfIndChart').innerHTML=ig.length?ig.map(x=>`<div class="pdf-hrow"><div class="pdf-hname" title="${esc(x.name)}">${esc(x.name)}</div><div class="pdf-hbars"><div class="pdf-hbar-line"><span class="pdf-hbar-label">Ag.</span><div class="pdf-hbar-track"><div class="pdf-hbar n" style="width:${Math.max(x.ag/imx*100,x.ag?1:0)}%"></div></div><b>${x.ag}</b></div><div class="pdf-hbar-line"><span class="pdf-hbar-label">Real.</span><div class="pdf-hbar-track"><div class="pdf-hbar r" style="width:${Math.max(x.real/imx*100,x.real?1:0)}%"></div></div><b>${x.real}</b></div></div></div>`).join(''):'<div class="rank-empty">Nenhuma indústria encontrada.</div>';
 
- // Tabela de indústria — SOMENTE a indústria selecionada.
- const igAll=ig;
+ // Detalhamento da indústria — UMA ÚNICA indústria, a selecionada.
  $('pdfIndWrap').style.display='';
  $('pdfIndTitle').textContent='Detalhamento completo — Indústria selecionada';
- buildPdfTable('pdfInd',igAll,[['name','Indústria',x=>esc(x.name)],['lojas','Qtd. lojas',x=>x.lojas],...std]);
+ buildPdfTable('pdfInd',ig,[['name','Indústria',x=>esc(x.name)],['lojas','Qtd. lojas',x=>x.lojas],...std]);
 
- const lojaData=group(rows,'loja').sort((a,b)=>b.real-a.real||a.name.localeCompare(b.name));
- const promData=group(rows,'prom').sort((a,b)=>b.real-a.real||a.name.localeCompare(b.name));
+ // Detalhamentos complementares — todos filtrados pela mesma indústria selecionada.
+ const lojaData=group(rows,'loja').sort((a,b)=>b.real-a.real||a.name.localeCompare(b.name,'pt-BR'));
+ const promData=group(rows,'prom').sort((a,b)=>b.real-a.real||a.name.localeCompare(b.name,'pt-BR'));
  buildPdfTable('pdfLojas',lojaData,[['name','Loja',x=>esc(x.name)],['lojas','Qtd. lojas',x=>x.lojas],...std]);
  buildPdfTable('pdfProm',promData,[['name','Promotor',x=>esc(x.name)],['lojas','Qtd. lojas',x=>x.lojas],...std]);
- const visitData=rows.slice().sort((a,b)=>dkey(a.date)-dkey(b.date)||a.loja.localeCompare(b.loja)||a.prom.localeCompare(b.prom));
+ const visitData=rows.slice().sort((a,b)=>dkey(a.date)-dkey(b.date)||a.loja.localeCompare(b.loja,'pt-BR')||a.prom.localeCompare(b.prom,'pt-BR'));
  buildPdfTable('pdfVisitas',visitData,[['date','Data',x=>esc(x.date)],['loja','Loja',x=>esc(x.loja)],['prom','Promotor',x=>esc(x.prom)],['comp','Comprador',x=>esc(x.comp||'—')],['status','Status',x=>esc(x.status)],['tempo','Tempo',x=>fH(x.tempo)],['nota','Nota',x=>x.nota?x.nota:'—']]);
  $('pdfDetail').dataset.industry=selectedIndustry;
 }
 
 function exportPDF(){
- closeIndustryList();
- buildPdfDetail();
- const old=document.title;
- const nm=curInd==='__all__'?'Geral':curInd.split(' - ')[0].trim();
- document.title='ColetorPRO - '+nm+' - '+$('period').textContent;
- window.onafterprint=()=>{document.title=old;window.onafterprint=null};
- requestAnimationFrame(()=>requestAnimationFrame(()=>window.print()));
+ try{
+  const typed=String($('indIn').value||'').trim();
+  const norm=v=>String(v??'').trim().toLocaleLowerCase('pt-BR');
+  const exact=suppliers.find(s=>norm(s)===norm(typed));
+  const selected=(exact||curInd||'').trim();
+  if(!selected || selected==='__all__'){
+   closeIndustryList();
+   alert('Selecione uma indústria específica antes de exportar o PDF.');
+   return;
+  }
+  curInd=selected;
+  $('indIn').value=selected;
+  closeIndustryList();
+  buildPdfDetail(selected);
+  const old=document.title;
+  document.title='ColetorPRO - '+selected.split(' - ')[0].trim()+' - '+$('period').textContent;
+  window.onafterprint=()=>{document.title=old;window.onafterprint=null};
+  requestAnimationFrame(()=>requestAnimationFrame(()=>window.print()));
+ }catch(err){
+  console.error(err);
+  alert(err.message||'Não foi possível preparar o PDF.');
+ }
 }
 
 async function loadPublishedData(){
