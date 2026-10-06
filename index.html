@@ -65,17 +65,37 @@
 </style>
 <style id="pdf-completo-fix">
 @media print{
-@page{size:A4 landscape;margin:7mm}
-.pdf-detail{display:block!important;width:100%!important}
-.pdf-detail .pdf-table-wrap{overflow:visible!important;width:100%!important;max-width:none!important;page-break-inside:auto}
-.pdf-detail table{width:100%!important;table-layout:auto!important;font-size:7px!important}
-.pdf-detail th,.pdf-detail td{white-space:normal!important;word-break:break-word!important;overflow:visible!important;padding:3px 4px!important}
-.pdf-detail th{font-size:6.5px!important}
-.pdf-detail td{font-size:7px!important}
-.pdf-detail tr{page-break-inside:avoid}
-.pdf-detail thead{display:table-header-group}
-.topbar,.tabs,.search,#empty,.footer{display:none!important}
-.table-wrap{max-height:none!important;overflow:visible!important}
+@page{size:A4 landscape;margin:8mm}
+*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+body{background:#fff!important}
+.header,.topbar,.tabs,.search,#empty,#app>.grid-kpi,#app>.section-title,#app>.grid2,#app>.visits-store-card,#app>.grid3,#app>.footer,.footer{display:none!important}
+.wrap{padding:0!important;max-width:none!important;margin:0!important}
+#app{display:block!important}
+.pdf-detail{display:block!important;width:100%!important;margin:0!important}
+.pdf-report-head{border-bottom:2px solid var(--red);padding:0 0 7px;margin-bottom:8px}
+.pdf-report-kicker{font-size:8px;letter-spacing:1.5px;font-weight:900;color:var(--red);text-transform:uppercase}
+.pdf-report-title{font-size:18px;font-weight:900;color:var(--navy);margin-top:2px}
+.pdf-detail .pdf-context{font-size:8px!important;margin:3px 0 0!important;color:var(--muted)}
+.pdf-detail .section-title{font-size:11px!important;margin:10px 0 5px!important;page-break-before:auto!important;break-after:avoid!important}
+.pdf-detail .section-title:before{width:4px!important;height:15px!important}
+.pdf-summary{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-bottom:5px}
+.pdf-summary .pdf-summary-item{border:1px solid var(--line);border-top:2px solid var(--red);padding:5px 6px;min-height:38px}
+.pdf-summary .label{font-size:6px;text-transform:uppercase;font-weight:900;color:var(--muted)}
+.pdf-summary .value{font-size:10px;font-weight:900;color:var(--navy);margin-top:2px}
+.pdf-summary .note{font-size:6px;color:var(--muted);margin-top:1px}
+.pdf-ranks{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:4px}
+.pdf-rank-box{border:1px solid var(--line);padding:5px;min-width:0}
+.pdf-rank-title{font-size:8px;font-weight:900;text-transform:uppercase;margin-bottom:3px;color:var(--navy)}
+.pdf-detail .pdf-table-wrap{overflow:visible!important;width:100%!important;max-width:none!important;page-break-inside:auto!important}
+.pdf-detail table{width:100%!important;table-layout:auto!important;border-collapse:collapse!important;font-size:6.2px!important}
+.pdf-detail th{background:var(--navy)!important;color:#fff!important;font-size:5.8px!important;line-height:1.1!important;padding:3px 3px!important;white-space:normal!important;word-break:break-word!important;position:static!important}
+.pdf-detail td{font-size:6.2px!important;line-height:1.15!important;padding:2.5px 3px!important;white-space:normal!important;word-break:break-word!important;overflow:visible!important}
+.pdf-detail tr{page-break-inside:avoid!important}
+.pdf-detail thead{display:table-header-group!important}
+.pdf-rank-box table{font-size:6px!important}
+.pdf-rank-box th{font-size:5.6px!important;padding:2.5px!important}
+.pdf-rank-box td{font-size:6px!important;padding:2px 2.5px!important}
+.pdf-detail .pdf-rank-box .pdf-table-wrap{page-break-inside:avoid!important}
 }
 </style>
 </head><body>
@@ -98,7 +118,15 @@
 <div class="section-title">Detalhamento completo</div>
 <section class="card"><div class="tabs" id="tabs"></div><div class="table-tools"><div><div class="card-title" id="tbTitle"></div><div class="card-sub" id="tbSub"></div></div><input class="search" id="q" placeholder="Buscar..."></div><div class="table-wrap"><table id="tb"><thead></thead><tbody></tbody></table></div></section>
 <div id="pdfDetail" class="pdf-detail">
-<div class="card-sub pdf-context" id="pdfContext"></div>
+<div class="pdf-report-head"><div class="pdf-report-kicker">COLETORPRO • RELATÓRIO COMPLETO</div><div class="pdf-report-title" id="pdfTitle">Execução por indústria</div><div class="card-sub pdf-context" id="pdfContext"></div></div>
+<div class="section-title">Resumo da indústria</div>
+<div class="pdf-summary" id="pdfSummary"></div>
+<div class="section-title">Visões selecionáveis</div>
+<div class="pdf-ranks">
+  <div class="pdf-rank-box"><div class="pdf-rank-title" id="pdfMoreTitle">Mais horas</div><div class="pdf-table-wrap"><table id="pdfRankMore"><thead></thead><tbody></tbody></table></div></div>
+  <div class="pdf-rank-box"><div class="pdf-rank-title" id="pdfLessTitle">Menos horas</div><div class="pdf-table-wrap"><table id="pdfRankLess"><thead></thead><tbody></tbody></table></div></div>
+  <div class="pdf-rank-box"><div class="pdf-rank-title" id="pdfNoneTitle">Sem visitas</div><div class="pdf-table-wrap"><table id="pdfRankNone"><thead></thead><tbody></tbody></table></div></div>
+</div>
 <div class="section-title">Detalhamento completo — Lojas</div><div class="pdf-table-wrap"><table id="pdfLojas"><thead></thead><tbody></tbody></table></div>
 <div class="section-title">Detalhamento completo — Promotores</div><div class="pdf-table-wrap"><table id="pdfProm"><thead></thead><tbody></tbody></table></div>
 <div class="section-title">Detalhamento completo — Visitas</div><div class="pdf-table-wrap"><table id="pdfVisitas"><thead></thead><tbody></tbody></table></div>
@@ -230,7 +258,29 @@ function buildPdfTable(id,data,cols){const tb=$(id);tb.querySelector('thead').in
 function buildPdfDetail(){
  const selectedIndustry=curInd;
  const rows=selectedIndustry==='__all__'?ALL.slice():ALL.filter(r=>r.forn===selectedIndustry);
+ const O=agg(rows);
+ const all=selectedIndustry==='__all__';
  const std=[['ag','Agendadas',x=>fI(x.ag)],['real','Realizadas',x=>fI(x.real)],['pct','Execução',x=>fP(x.pct)],['nc','Não compareceu',x=>fI(x.nc)],['ea','Em andamento',x=>fI(x.ea)],['sc','Agendado (a realizar)',x=>fI(x.sc)],['contr','Horas contratadas',x=>fH(x.contr)],['exec','Horas executadas',x=>fH(x.exec)],['util','Utilização das horas',x=>x.util==null?'—':fP(x.util)],['avg','Tempo médio',x=>fH(x.avg)],['min','Menor atendimento',x=>fMin(x.min)],['nota','Nota / 5',x=>fN(x.nota)]];
+ $('pdfTitle').textContent=all?'Execução geral — relatório completo':'Indústria — '+selectedIndustry;
+ $('pdfContext').textContent=(all?'Todas as indústrias — banco completo':'Indústria selecionada: '+selectedIndustry)+' • '+fI(rows.length)+' visitas';
+ const summary=[['Visitas agendadas',fI(O.ag),'programadas'],['Visitas realizadas',fI(O.real),fP(O.pct)+' de execução'],['Horas contratadas',fH(O.contr),'base registrada'],['Horas executadas',fH(O.exec),O.util==null?'sem horas contratadas':fP(O.util)+' das contratadas'],['Tempo médio',fH(O.avg),'por visita realizada'],['Nota média',fN(O.nota),'escala máxima 5,0'],['Não compareceu',fI(O.nc),'visitas'],['Em andamento',fI(O.ea),'visitas'],['Agendado (a realizar)',fI(O.sc),'visitas'],['Gap de visitas',fI(O.real-O.ag),'realizadas − agendadas'],['Gap de horas',fH(O.exec-O.contr),'executadas − contratadas'],['Menor atendimento',fMin(O.min),'entre realizadas']];
+ $('pdfSummary').innerHTML=summary.map(x=>`<div class="pdf-summary-item"><div class="label">${x[0]}</div><div class="value">${x[1]}</div><div class="note">${x[2]}</div></div>`).join('');
+ const rankBase=all?group(rows,'forn'):group(rows,'loja');
+ const makeRank=(mode)=>{
+   let list=[];
+   if(mode==='more') list=[...rankBase].sort((a,b)=>b.exec-a.exec).slice(0,6);
+   if(mode==='less') list=[...rankBase].filter(x=>x.exec>0).sort((a,b)=>a.exec-b.exec).slice(0,6);
+   if(mode==='none') list=[...rankBase].filter(x=>x.real===0).sort((a,b)=>a.name.localeCompare(b.name));
+   return list;
+ };
+ const rankCols=[['name',all?'Indústria':'Loja',x=>esc(x.name)],['real','Realizadas',x=>fI(x.real)],['exec','H. executadas',x=>fH(x.exec)],['pct','Execução',x=>fP(x.pct)]];
+ const rankNoneCols=[['name',all?'Indústria':'Loja',x=>esc(x.name)],['ag','Agendadas',x=>fI(x.ag)],['real','Realizadas',x=>fI(x.real)]];
+ buildPdfTable('pdfRankMore',makeRank('more'),rankCols);
+ buildPdfTable('pdfRankLess',makeRank('less'),rankCols);
+ buildPdfTable('pdfRankNone',makeRank('none'),rankNoneCols);
+ $('pdfMoreTitle').textContent=(all?'Indústrias':'Lojas')+' — mais horas';
+ $('pdfLessTitle').textContent=(all?'Indústrias':'Lojas')+' — menos horas';
+ $('pdfNoneTitle').textContent=(all?'Indústrias':'Lojas')+' — sem visitas realizadas';
  const lojaData=group(rows,'loja').sort((a,b)=>b.real-a.real||a.name.localeCompare(b.name));
  const promData=group(rows,'prom').sort((a,b)=>b.real-a.real||a.name.localeCompare(b.name));
  buildPdfTable('pdfLojas',lojaData,[['name','Loja',x=>esc(x.name)],['lojas','Qtd. lojas',x=>x.lojas],...std]);
@@ -238,7 +288,6 @@ function buildPdfDetail(){
  const visitData=rows.slice().sort((a,b)=>dkey(a.date)-dkey(b.date)||a.loja.localeCompare(b.loja)||a.prom.localeCompare(b.prom));
  buildPdfTable('pdfVisitas',visitData,[['date','Data',x=>esc(x.date)],['loja','Loja',x=>esc(x.loja)],['prom','Promotor',x=>esc(x.prom)],['comp','Comprador',x=>esc(x.comp||'—')],['status','Status',x=>esc(x.status)],['tempo','Tempo',x=>fH(x.tempo)],['nota','Nota',x=>x.nota?x.nota:'—']]);
  $('pdfDetail').dataset.industry=selectedIndustry;
- $('pdfContext').textContent=(selectedIndustry==='__all__'?'Todas as indústrias — banco completo':'Indústria selecionada: '+selectedIndustry)+' • detalhamento completo da seleção • '+fI(rows.length)+' visitas';
 }
 function exportPDF(){
  closeIndustryList();
