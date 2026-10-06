@@ -359,46 +359,42 @@ function exportHTML(){
   alert('Selecione uma indústria antes de baixar o HTML.');
   return;
  }
- // Cria um snapshot estático EXATAMENTE da indústria que está na tela.
- // Não leva o PDF interno, seletor, scripts, nem dados de outras indústrias.
+ // Exporta somente a indústria atual, mas mantém o JavaScript do dashboard
+ // para que os botões continuem funcionando no arquivo baixado.
+ const selectedRows=ALL.filter(r=>r.forn===curInd);
+ const dataJson=JSON.stringify(selectedRows).replace(/</g,'\\u003c').replace(/>/g,'\\u003e').replace(/&/g,'\\u0026');
  const docClone=document.documentElement.cloneNode(true);
- const head=docClone.querySelector('head');
- const body=docClone.querySelector('body');
  const app=docClone.querySelector('#app');
- const topbar=docClone.querySelector('.topbar');
  const empty=docClone.querySelector('#empty');
  const pdfDetail=docClone.querySelector('#pdfDetail');
- const scripts=docClone.querySelectorAll('script');
  const indList=docClone.querySelector('#indList');
- const footer=docClone.querySelector('.footer');
- if(topbar) topbar.remove();
+ const combo=docClone.querySelector('.combo');
+ const exportBtn=docClone.querySelector('#pdfBtn');
  if(empty) empty.remove();
  if(pdfDetail) pdfDetail.remove();
  if(indList) indList.remove();
- scripts.forEach(x=>x.remove());
- if(app){
-   app.classList.remove('hidden');
-   app.querySelectorAll('button[data-rank]').forEach(x=>x.disabled=true);
-   const search=app.querySelector('#q');
-   if(search) search.remove();
-   const tableTools=app.querySelector('.table-tools');
-   if(tableTools){
-     const title=tableTools.querySelector('#tbTitle');
-     const sub=tableTools.querySelector('#tbSub');
-     if(title) title.style.marginBottom='2px';
-     if(sub) sub.style.marginBottom='0';
-   }
- }
- const titleName=String(curInd).replace(/\\/g,'\\\\').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+ // Remove somente o seletor e o botão de exportação do arquivo final.
+ if(combo) combo.remove();
+ if(exportBtn) exportBtn.remove();
+ if(app) app.classList.remove('hidden');
+ // NÃO desabilitar botões: rank/tabs/controles continuam interativos.
  const titleEl=docClone.querySelector('#ttl');
  const subEl=docClone.querySelector('#sub');
  if(titleEl) titleEl.innerHTML='INDÚSTRIA <span>| '+esc(curInd.length>48?curInd.slice(0,46)+'…':curInd)+'</span>';
  if(subEl) subEl.textContent=curInd+' • visão detalhada por loja, promotor e visita';
- if(footer){footer.querySelectorAll('span').forEach(x=>x.style.display='none');}
  const css=[...document.querySelectorAll('style')].map(x=>x.textContent).join('\n');
+ const scripts=[...document.querySelectorAll('script')].map(x=>x.textContent).join('\n');
+ // Substitui a inicialização original por uma inicialização com os dados filtrados.
+ const safeData=dataJson;
+ const init=`\n<script>window.__EXPORTED_DATA__=${safeData};<\/script>\n`;
+ let js=scripts;
+ const loadRe=/async function loadPublishedData\(\)\{[\s\S]*?\n\}\nloadPublishedData\(\);/;
+ const replacement=`async function loadPublishedData(){\n try{\n  ALL=window.__EXPORTED_DATA__.slice();\n  suppliers=[...new Set(ALL.map(r=>r.forn))].filter(Boolean).sort((a,b)=>a.localeCompare(b));\n  const ds=ALL.map(r=>r.date).filter(Boolean).sort((a,b)=>dkey(a)<dkey(b)?-1:1);\n  $('period').textContent=ds.length?ds[0]+' A '+ds[ds.length-1]:'SEM PERÍODO';\n  $('indIn')?.remove();\n  $('empty')?.remove();\n  $('app').classList.remove('hidden');\n  curInd=ALL.length?ALL[0].forn:'__all__';\n  render();\n }catch(err){console.error(err);}\n}\nloadPublishedData();`;
+ js=js.replace(loadRe,replacement);
+ // O listener de busca pode não existir após a remoção; mantém os demais eventos.
  const header=docClone.querySelector('header')?.outerHTML||'';
  const main=docClone.querySelector('main')?.outerHTML||'';
- const html='<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ColetorPRO - '+titleName+'</title><style>'+css+'\nbody{background:#f4f6f8!important}.topbar{display:none!important}.pdf-detail{display:none!important}.footer{margin-top:18px}</style></head><body>'+header+main+'</body></html>';
+ const html='<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ColetorPRO - '+curInd.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</title><style>'+css+'\nbody{background:#f4f6f8!important}.topbar{min-height:0}.pdf-detail{display:none!important}.combo{display:none!important}</style></head><body>'+header+main+init+'<script>'+js.replace(/<\\\/script>/gi,'<\\/script>')+'<\/script></body></html>';
  const blob=new Blob([html],{type:'text/html;charset=utf-8'});
  const url=URL.createObjectURL(blob);
  const a=document.createElement('a');
