@@ -336,7 +336,6 @@ function buildPdfDetail(){
 
  // Tabela completa por indústria — TODAS as indústrias e TODAS as métricas
  const igAll=ig;
- $('pdfIndChartWrap').style.display='';
  $('pdfIndWrap').style.display='';
  $('pdfIndTitle').textContent='Detalhamento completo — Indústrias ('+fI(igAll.length)+')';
  buildPdfTable('pdfInd',igAll,[['name','Indústria',x=>esc(x.name)],['lojas','Qtd. lojas',x=>x.lojas],...std]);
