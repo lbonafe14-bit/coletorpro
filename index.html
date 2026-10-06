@@ -110,7 +110,7 @@ body{background:#fff!important}
 .hb{height:3px;border-radius:1px;margin:.6px 0}
 .pdf-detail thead{display:table-header-group!important}
 }
-.pdf-hchart-wrap{width:100%;overflow:visible;margin-bottom:8px}.pdf-hchart{display:flex;align-items:flex-end;gap:8px;min-height:180px;padding:12px 8px 42px;border-bottom:1px solid var(--line);overflow-x:auto;overflow-y:visible}.pdf-hchart .g{flex:0 0 76px;height:150px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;position:relative}.pdf-hchart .bs{height:112px;width:100%;display:flex;align-items:flex-end;justify-content:center;gap:3px}.pdf-hchart .b{width:18px;max-width:18px;min-height:2px;border-radius:3px 3px 0 0;position:relative}.pdf-hchart .b i{position:absolute;top:-13px;left:50%;transform:translateX(-50%);font-style:normal;font-size:6px;font-weight:900;white-space:nowrap;color:var(--navy)}.pdf-hchart .lb{position:absolute;bottom:-38px;width:72px;text-align:center;font-size:6px;line-height:1.1;color:var(--muted);font-weight:800;overflow-wrap:anywhere;word-break:break-word}.pdf-hchart.empty{min-height:45px;padding:12px;text-align:center;color:var(--muted);font-size:8px}@media print{.pdf-hchart-wrap{break-inside:avoid}.pdf-hchart{min-height:145px;height:155px;overflow:visible!important;padding-bottom:38px}.pdf-hchart .g{flex:1 1 0;min-width:35px;max-width:95px;height:125px}.pdf-hchart .bs{height:92px}.pdf-hchart .b{width:12px;max-width:12px}.pdf-hchart .lb{bottom:-34px;width:88px;font-size:5.5px}.pdf-hchart .b i{font-size:5px}}
+.pdf-hrow{display:grid;grid-template-columns:minmax(150px,28%) 1fr;gap:10px;align-items:center;padding:5px 4px;border-bottom:1px solid var(--line);break-inside:avoid}.pdf-hname{font-size:7px;line-height:1.15;font-weight:800;color:var(--navy);overflow-wrap:anywhere;word-break:break-word}.pdf-hbars{display:flex;flex-direction:column;gap:3px}.pdf-hbar-line{display:grid;grid-template-columns:24px 1fr 24px;gap:5px;align-items:center;font-size:6.5px}.pdf-hbar-label{font-weight:800;color:var(--muted)}.pdf-hbar-line>b{text-align:right;font-size:6.5px}.pdf-hbar-track{height:7px;background:#edf0f3;border-radius:4px;overflow:hidden}.pdf-hbar{height:100%;border-radius:4px}.pdf-hchart .pdf-hrow{min-height:30px}.pdf-hchart{display:block;min-height:0;padding:4px 0;border-bottom:1px solid var(--line);overflow:visible!important}.pdf-hchart-wrap{width:100%;overflow:visible;margin-bottom:8px}.pdf-hchart{display:flex;align-items:flex-end;gap:8px;min-height:180px;padding:12px 8px 42px;border-bottom:1px solid var(--line);overflow-x:auto;overflow-y:visible}.pdf-hchart .g{flex:0 0 76px;height:150px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;position:relative}.pdf-hchart .bs{height:112px;width:100%;display:flex;align-items:flex-end;justify-content:center;gap:3px}.pdf-hchart .b{width:18px;max-width:18px;min-height:2px;border-radius:3px 3px 0 0;position:relative}.pdf-hchart .b i{position:absolute;top:-13px;left:50%;transform:translateX(-50%);font-style:normal;font-size:6px;font-weight:900;white-space:nowrap;color:var(--navy)}.pdf-hchart .lb{position:absolute;bottom:-38px;width:72px;text-align:center;font-size:6px;line-height:1.1;color:var(--muted);font-weight:800;overflow-wrap:anywhere;word-break:break-word}.pdf-hchart.empty{min-height:45px;padding:12px;text-align:center;color:var(--muted);font-size:8px}@media print{.pdf-hrow{grid-template-columns:minmax(180px,30%) 1fr;gap:8px;padding:4px}.pdf-hname{font-size:6.5px}.pdf-hbar-line{grid-template-columns:22px 1fr 20px;font-size:6px}.pdf-hbar-track{height:6px}.pdf-hbar-line>b{font-size:6px}.pdf-hchart-wrap{break-inside:avoid}.pdf-hchart{min-height:145px;height:155px;overflow:visible!important;padding-bottom:38px}.pdf-hchart .g{flex:1 1 0;min-width:35px;max-width:95px;height:125px}.pdf-hchart .bs{height:92px}.pdf-hchart .b{width:12px;max-width:12px}.pdf-hchart .lb{bottom:-34px;width:88px;font-size:5.5px}.pdf-hchart .b i{font-size:5px}}
 </style>
 </head><body>
 <header class="header"><div class="brand"><div class="eyebrow">Resultados em campo • ColetorPRO</div><h1 id="ttl">EXECUÇÃO POR INDÚSTRIA <span>| Dashboard</span></h1><div class="subtitle" id="sub">Dashboard público • dados carregados automaticamente</div></div><div class="period" id="period">CARREGANDO DADOS</div></header>
@@ -321,23 +321,23 @@ function buildPdfDetail(){
  const mrow=(l,v)=>`<div class="pdf-m"><span>${l}</span><b>${v}</b></div>`;
  $('pdfOpSide').innerHTML='<div class="pdf-chart-title">Aproveitamento da operação</div>'+prog('Visitas realizadas',O.pct,'#e30613')+prog('Horas executadas',O.util,'#0b2742')+mrow('Gap de visitas',fI(O.real-O.ag)+' visitas')+mrow('Gap de horas',fH(O.exec-O.contr))+mrow('Não compareceu',fI(O.nc))+mrow('Em andamento',fI(O.ea))+mrow('Agendado (a realizar)',fI(O.sc))+mrow('Tempo médio por visita',fH(O.avg))+mrow('Menor atendimento',fMin(O.min))+mrow('Nota média do repositor',fN(O.nota)+' / 5');
 
- // Gráfico por loja — mesmo formato do dashboard, com as 20 maiores lojas
- const sg=group(rows,'loja').sort((a,b)=>b.real-a.real||b.ag-a.ag||byName(a,b)).slice(0,20);
+ // Gráfico por loja — SOMENTE lojas da indústria selecionada.
+ // Usa barras horizontais para que o nome completo nunca seja cortado.
+ const sg=group(rows,'loja').sort((a,b)=>b.real-a.real||b.ag-a.ag||byName(a,b));
  const smx=mxOf(sg);
- $('pdfStoreTitle').textContent='Visitas por loja — top 20 ('+fI(sg.length)+')';
- $('pdfStoreChart').innerHTML=sg.length?sg.map(x=>`<div class="g"><div class="bs"><div class="b n" style="height:${Math.max(x.ag/smx*84,2)}px"><i>${x.ag}</i></div><div class="b r" style="height:${Math.max(x.real/smx*84,2)}px"><i>${x.real}</i></div></div><div class="lb" title="${esc(x.name)}">${esc(x.name)}</div></div>`).join(''):'<div class="rank-empty">Nenhuma loja encontrada.</div>';
+ $('pdfStoreTitle').textContent='Visitas por loja ('+fI(sg.length)+')';
+ $('pdfStoreChart').innerHTML=sg.length?sg.map(x=>`<div class="pdf-hrow"><div class="pdf-hname" title="${esc(x.name)}">${esc(x.name)}</div><div class="pdf-hbars"><div class="pdf-hbar-line"><span class="pdf-hbar-label">Ag.</span><div class="pdf-hbar-track"><div class="pdf-hbar n" style="width:${Math.max(x.ag/smx*100,x.ag?1:0)}%"></div></div><b>${x.ag}</b></div><div class="pdf-hbar-line"><span class="pdf-hbar-label">Real.</span><div class="pdf-hbar-track"><div class="pdf-hbar r" style="width:${Math.max(x.real/smx*100,x.real?1:0)}%"></div></div><b>${x.real}</b></div></div></div>`).join(''):'<div class="rank-empty">Nenhuma loja encontrada.</div>';
 
- // Gráfico por indústria — sempre completo, independentemente da indústria selecionada
- const industryRows=ALL.slice();
- const ig=group(industryRows,'forn').sort((a,b)=>b.real-a.real||b.ag-a.ag||byName(a,b));
- const igTop=ig.slice(0,12), imx=mxOf(igTop);
- $('pdfIndChartTitle').textContent='Visitas por indústria — top 12 ('+fI(ig.length)+' no total)';
- $('pdfIndChart').innerHTML=igTop.length?igTop.map(x=>`<div class="g"><div class="bs"><div class="b n" style="height:${Math.max(x.ag/imx*84,2)}px"><i>${x.ag}</i></div><div class="b r" style="height:${Math.max(x.real/imx*84,2)}px"><i>${x.real}</i></div></div><div class="lb" title="${esc(x.name)}">${esc(x.name)}</div></div>`).join(''):'<div class="rank-empty">Nenhuma indústria encontrada.</div>';
+ // Gráfico por indústria — SOMENTE a indústria selecionada.
+ const ig=group(rows,'forn').sort((a,b)=>b.real-a.real||b.ag-a.ag||byName(a,b));
+ const imx=mxOf(ig);
+ $('pdfIndChartTitle').textContent='Visitas por indústria — selecionada';
+ $('pdfIndChart').innerHTML=ig.length?ig.map(x=>`<div class="pdf-hrow"><div class="pdf-hname" title="${esc(x.name)}">${esc(x.name)}</div><div class="pdf-hbars"><div class="pdf-hbar-line"><span class="pdf-hbar-label">Ag.</span><div class="pdf-hbar-track"><div class="pdf-hbar n" style="width:${Math.max(x.ag/imx*100,x.ag?1:0)}%"></div></div><b>${x.ag}</b></div><div class="pdf-hbar-line"><span class="pdf-hbar-label">Real.</span><div class="pdf-hbar-track"><div class="pdf-hbar r" style="width:${Math.max(x.real/imx*100,x.real?1:0)}%"></div></div><b>${x.real}</b></div></div></div>`).join(''):'<div class="rank-empty">Nenhuma indústria encontrada.</div>';
 
- // Tabela completa por indústria — TODAS as indústrias e TODAS as métricas
+ // Tabela de indústria — SOMENTE a indústria selecionada.
  const igAll=ig;
  $('pdfIndWrap').style.display='';
- $('pdfIndTitle').textContent='Detalhamento completo — Indústrias ('+fI(igAll.length)+')';
+ $('pdfIndTitle').textContent='Detalhamento completo — Indústria selecionada';
  buildPdfTable('pdfInd',igAll,[['name','Indústria',x=>esc(x.name)],['lojas','Qtd. lojas',x=>x.lojas],...std]);
 
  const lojaData=group(rows,'loja').sort((a,b)=>b.real-a.real||a.name.localeCompare(b.name));
