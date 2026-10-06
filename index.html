@@ -65,37 +65,40 @@
 </style>
 <style id="pdf-completo-fix">
 @media print{
-@page{size:A4 landscape;margin:8mm}
+@page{size:A4 landscape;margin:6mm}
 *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
-body{background:#fff!important}
+html,body{width:100%!important;background:#fff!important;margin:0!important;padding:0!important}
 .header,.topbar,.tabs,.search,#empty,#app>.grid-kpi,#app>.section-title,#app>.grid2,#app>.visits-store-card,#app>.grid3,#app>.footer,.footer{display:none!important}
-.wrap{padding:0!important;max-width:none!important;margin:0!important}
-#app{display:block!important}
-.pdf-detail{display:block!important;width:100%!important;margin:0!important}
-.pdf-report-head{border-bottom:2px solid var(--red);padding:0 0 7px;margin-bottom:8px}
-.pdf-report-kicker{font-size:8px;letter-spacing:1.5px;font-weight:900;color:var(--red);text-transform:uppercase}
-.pdf-report-title{font-size:18px;font-weight:900;color:var(--navy);margin-top:2px}
-.pdf-detail .pdf-context{font-size:8px!important;margin:3px 0 0!important;color:var(--muted)}
-.pdf-detail .section-title{font-size:11px!important;margin:10px 0 5px!important;page-break-before:auto!important;break-after:avoid!important}
-.pdf-detail .section-title:before{width:4px!important;height:15px!important}
-.pdf-summary{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-bottom:5px}
-.pdf-summary .pdf-summary-item{border:1px solid var(--line);border-top:2px solid var(--red);padding:5px 6px;min-height:38px}
-.pdf-summary .label{font-size:6px;text-transform:uppercase;font-weight:900;color:var(--muted)}
-.pdf-summary .value{font-size:10px;font-weight:900;color:var(--navy);margin-top:2px}
-.pdf-summary .note{font-size:6px;color:var(--muted);margin-top:1px}
-.pdf-ranks{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:4px}
-.pdf-rank-box{border:1px solid var(--line);padding:5px;min-width:0}
-.pdf-rank-title{font-size:8px;font-weight:900;text-transform:uppercase;margin-bottom:3px;color:var(--navy)}
-.pdf-detail .pdf-table-wrap{overflow:visible!important;width:100%!important;max-width:none!important;page-break-inside:auto!important}
-.pdf-detail table{width:100%!important;table-layout:auto!important;border-collapse:collapse!important;font-size:6.2px!important}
-.pdf-detail th{background:var(--navy)!important;color:#fff!important;font-size:5.8px!important;line-height:1.1!important;padding:3px 3px!important;white-space:normal!important;word-break:break-word!important;position:static!important}
-.pdf-detail td{font-size:6.2px!important;line-height:1.15!important;padding:2.5px 3px!important;white-space:normal!important;word-break:break-word!important;overflow:visible!important}
-.pdf-detail tr{page-break-inside:avoid!important}
+.wrap{padding:0!important;max-width:none!important;width:100%!important;margin:0!important}
+#app{display:block!important;width:100%!important}
+.pdf-detail{display:block!important;width:100%!important;margin:0!important;padding:0!important}
+.pdf-report-head{border-bottom:2px solid var(--red);padding:0 0 5px;margin:0 0 6px}
+.pdf-report-kicker{font-size:7px;letter-spacing:1.2px;font-weight:900;color:var(--red);text-transform:uppercase}
+.pdf-report-title{font-size:16px;font-weight:900;color:var(--navy);margin-top:1px}
+.pdf-detail .pdf-context{font-size:7px!important;margin:2px 0 0!important;color:var(--muted)}
+.pdf-detail .section-title{font-size:10px!important;margin:8px 0 4px!important;page-break-before:always!important;break-before:page!important;break-after:avoid!important}
+.pdf-detail .section-title:first-of-type{page-break-before:auto!important;break-before:auto!important}
+.pdf-detail .section-title:before{width:3px!important;height:13px!important}
+.pdf-summary{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-bottom:4px}
+.pdf-summary .pdf-summary-item{border:1px solid var(--line);border-top:2px solid var(--red);padding:4px 5px;min-height:34px}
+.pdf-summary .label{font-size:5.5px;text-transform:uppercase;font-weight:900;color:var(--muted)}
+.pdf-summary .value{font-size:9px;font-weight:900;color:var(--navy);margin-top:1px}
+.pdf-summary .note{font-size:5.5px;color:var(--muted);margin-top:1px}
+/* Os rankings são empilhados no PDF. Assim nenhum bloco fica preso em uma única página. */
+.pdf-ranks{display:block!important;margin-bottom:0!important}
+.pdf-rank-box{display:block!important;width:100%!important;border:0!important;padding:0!important;margin:0 0 7px!important;min-width:0!important;page-break-inside:auto!important;break-inside:auto!important}
+.pdf-rank-title{font-size:8px;font-weight:900;text-transform:uppercase;margin:3px 0 2px;color:var(--navy);border-bottom:1px solid var(--line);padding-bottom:2px}
+.pdf-detail .pdf-table-wrap{display:block!important;overflow:visible!important;width:100%!important;max-width:none!important;height:auto!important;max-height:none!important;page-break-inside:auto!important;break-inside:auto!important}
+.pdf-detail table{display:table!important;width:100%!important;max-width:100%!important;table-layout:fixed!important;border-collapse:collapse!important;font-size:6px!important}
+.pdf-detail th{background:var(--navy)!important;color:#fff!important;font-size:5.5px!important;line-height:1.05!important;padding:2px 3px!important;white-space:normal!important;word-break:break-word!important;overflow:visible!important;position:static!important}
+.pdf-detail td{font-size:5.8px!important;line-height:1.1!important;padding:2px 3px!important;white-space:normal!important;word-break:break-word!important;overflow:visible!important;vertical-align:top!important}
+.pdf-detail tr{page-break-inside:avoid!important;break-inside:avoid!important}
 .pdf-detail thead{display:table-header-group!important}
-.pdf-rank-box table{font-size:6px!important}
-.pdf-rank-box th{font-size:5.6px!important;padding:2.5px!important}
-.pdf-rank-box td{font-size:6px!important;padding:2px 2.5px!important}
-.pdf-detail .pdf-rank-box .pdf-table-wrap{page-break-inside:avoid!important}
+.pdf-detail tbody{display:table-row-group!important}
+.pdf-rank-box table{font-size:5.8px!important}
+.pdf-rank-box th{font-size:5.3px!important;padding:2px 3px!important}
+.pdf-rank-box td{font-size:5.6px!important;padding:1.8px 3px!important}
+/* Cada grande detalhamento começa em uma página nova, mas a tabela pode continuar nas páginas seguintes. */
 }
 </style>
 </head><body>
@@ -268,21 +271,23 @@ function buildPdfDetail(){
  const rankBase=all?group(rows,'forn'):group(rows,'loja');
  const makeRank=(mode)=>{
    let list=[];
-   if(mode==='more') list=[...rankBase].sort((a,b)=>b.exec-a.exec).slice(0,6);
-   if(mode==='less') list=[...rankBase].filter(x=>x.exec>0).sort((a,b)=>a.exec-b.exec).slice(0,6);
+   if(mode==='more') list=[...rankBase].sort((a,b)=>b.exec-a.exec||b.real-a.real||a.name.localeCompare(b.name));
+   if(mode==='less') list=[...rankBase].filter(x=>x.exec>0).sort((a,b)=>a.exec-b.exec||a.real-b.real||a.name.localeCompare(b.name));
    if(mode==='none') list=[...rankBase].filter(x=>x.real===0).sort((a,b)=>a.name.localeCompare(b.name));
    return list;
  };
  const rankCols=[['name',all?'Indústria':'Loja',x=>esc(x.name)],['real','Realizadas',x=>fI(x.real)],['exec','H. executadas',x=>fH(x.exec)],['pct','Execução',x=>fP(x.pct)]];
  const rankNoneCols=[['name',all?'Indústria':'Loja',x=>esc(x.name)],['ag','Agendadas',x=>fI(x.ag)],['real','Realizadas',x=>fI(x.real)]];
- buildPdfTable('pdfRankMore',makeRank('more'),rankCols);
- buildPdfTable('pdfRankLess',makeRank('less'),rankCols);
- buildPdfTable('pdfRankNone',makeRank('none'),rankNoneCols);
- $('pdfMoreTitle').textContent=(all?'Indústrias':'Lojas')+' — mais horas';
- $('pdfLessTitle').textContent=(all?'Indústrias':'Lojas')+' — menos horas';
- $('pdfNoneTitle').textContent=(all?'Indústrias':'Lojas')+' — sem visitas realizadas';
+ const moreList=makeRank('more'),lessList=makeRank('less'),noneList=makeRank('none');
+ buildPdfTable('pdfRankMore',moreList,rankCols);
+ buildPdfTable('pdfRankLess',lessList,rankCols);
+ buildPdfTable('pdfRankNone',noneList,rankNoneCols);
+ $('pdfMoreTitle').textContent=(all?'Indústrias':'Lojas')+' — mais horas ('+moreList.length+')';
+ $('pdfLessTitle').textContent=(all?'Indústrias':'Lojas')+' — menos horas ('+lessList.length+')';
+ $('pdfNoneTitle').textContent=(all?'Indústrias':'Lojas')+' — sem visitas realizadas ('+noneList.length+')';
  const lojaData=group(rows,'loja').sort((a,b)=>b.real-a.real||a.name.localeCompare(b.name));
  const promData=group(rows,'prom').sort((a,b)=>b.real-a.real||a.name.localeCompare(b.name));
+ $('pdfContext').textContent=(all?'Todas as indústrias — banco completo':'Indústria selecionada: '+selectedIndustry)+' • '+fI(rows.length)+' visitas • '+fI(lojaData.length)+' lojas • '+fI(promData.length)+' promotores';
  buildPdfTable('pdfLojas',lojaData,[['name','Loja',x=>esc(x.name)],['lojas','Qtd. lojas',x=>x.lojas],...std]);
  buildPdfTable('pdfProm',promData,[['name','Promotor',x=>esc(x.name)],['lojas','Qtd. lojas',x=>x.lojas],...std]);
  const visitData=rows.slice().sort((a,b)=>dkey(a.date)-dkey(b.date)||a.loja.localeCompare(b.loja)||a.prom.localeCompare(b.prom));
