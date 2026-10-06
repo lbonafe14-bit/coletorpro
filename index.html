@@ -391,7 +391,12 @@ function exportHTML(){
  const loadRe=/async function loadPublishedData\(\)\{[\s\S]*?\n\}\nloadPublishedData\(\);/;
  const replacement=`async function loadPublishedData(){\n try{\n  ALL=window.__EXPORTED_DATA__.slice();\n  suppliers=[...new Set(ALL.map(r=>r.forn))].filter(Boolean).sort((a,b)=>a.localeCompare(b));\n  const ds=ALL.map(r=>r.date).filter(Boolean).sort((a,b)=>dkey(a)<dkey(b)?-1:1);\n  $('period').textContent=ds.length?ds[0]+' A '+ds[ds.length-1]:'SEM PERÍODO';\n  $('indIn')?.remove();\n  $('empty')?.remove();\n  $('app').classList.remove('hidden');\n  curInd=ALL.length?ALL[0].forn:'__all__';\n  render();\n }catch(err){console.error(err);}\n}\nloadPublishedData();`;
  js=js.replace(loadRe,replacement);
- // O listener de busca pode não existir após a remoção; mantém os demais eventos.
+ // No arquivo exportado o seletor de indústria foi removido. Remova os listeners
+ // que dependem dele para que eles não interrompam a execução dos demais botões.
+ js=js.replace(/\$\('indIn'\)\.addEventListener\([\s\S]*?\n\$\('indList'\)\.addEventListener\([\s\S]*?\n\},[\s\S]*?\);\n/, '');
+ js=js.replace(/document\.addEventListener\('click',[\s\S]*?\);\n/, '');
+ // Garante que a busca/tabela continue funcional no arquivo exportado.
+ js=js.replace(/\$\('q'\)\.addEventListener\('input',renderTable\);/, "if($('q')) $('q').addEventListener('input',renderTable);");
  const header=docClone.querySelector('header')?.outerHTML||'';
  const main=docClone.querySelector('main')?.outerHTML||'';
  const html='<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ColetorPRO - '+curInd.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</title><style>'+css+'\nbody{background:#f4f6f8!important}.topbar{min-height:0}.pdf-detail{display:none!important}.combo{display:none!important}</style></head><body>'+header+main+init+'<script>'+js.replace(/<\\\/script>/gi,'<\\/script>')+'<\/script></body></html>';
