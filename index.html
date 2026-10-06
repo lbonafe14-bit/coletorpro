@@ -116,7 +116,7 @@ body{background:#fff!important}
 <header class="header"><div class="brand"><div class="eyebrow">Resultados em campo • ColetorPRO</div><h1 id="ttl">EXECUÇÃO POR INDÚSTRIA <span>| Dashboard</span></h1><div class="subtitle" id="sub">Dashboard público • dados carregados automaticamente</div></div><div class="period" id="period">CARREGANDO DADOS</div></header>
 <main class="wrap">
 <div class="topbar"><div class="combo"><label>Indústria (fornecedor)</label><input id="indIn" placeholder="Carregando dados publicados..." autocomplete="off" disabled><div class="combo-list hidden" id="indList"></div></div>
-<div><button class="btn btn-pdf" id="pdfBtn" disabled onclick="exportPDF()">Exportar PDF</button></div>
+<div><button class="btn btn-pdf" id="pdfBtn" disabled onclick="exportHTML()">Baixar HTML da indústria</button></div>
 </div>
 <div id="empty">Carregando dados publicados...</div>
 <div id="app" class="hidden">
@@ -353,29 +353,59 @@ function buildPdfDetail(selectedIndustryOverride){
  $('pdfDetail').dataset.industry=selectedIndustry;
 }
 
-function exportPDF(){
- try{
-  const typed=String($('indIn').value||'').trim();
-  const norm=v=>String(v??'').trim().toLocaleLowerCase('pt-BR');
-  const exact=suppliers.find(s=>norm(s)===norm(typed));
-  const selected=(exact||curInd||'').trim();
-  if(!selected || selected==='__all__'){
-   closeIndustryList();
-   alert('Selecione uma indústria específica antes de exportar o PDF.');
-   return;
-  }
-  curInd=selected;
-  $('indIn').value=selected;
-  closeIndustryList();
-  buildPdfDetail(selected);
-  const old=document.title;
-  document.title='ColetorPRO - '+selected.split(' - ')[0].trim()+' - '+$('period').textContent;
-  window.onafterprint=()=>{document.title=old;window.onafterprint=null};
-  requestAnimationFrame(()=>requestAnimationFrame(()=>window.print()));
- }catch(err){
-  console.error(err);
-  alert(err.message||'Não foi possível preparar o PDF.');
+function exportHTML(){
+ closeIndustryList();
+ if(curInd==='__all__'){
+  alert('Selecione uma indústria antes de baixar o HTML.');
+  return;
  }
+ // Cria um snapshot estático EXATAMENTE da indústria que está na tela.
+ // Não leva o PDF interno, seletor, scripts, nem dados de outras indústrias.
+ const docClone=document.documentElement.cloneNode(true);
+ const head=docClone.querySelector('head');
+ const body=docClone.querySelector('body');
+ const app=docClone.querySelector('#app');
+ const topbar=docClone.querySelector('.topbar');
+ const empty=docClone.querySelector('#empty');
+ const pdfDetail=docClone.querySelector('#pdfDetail');
+ const scripts=docClone.querySelectorAll('script');
+ const indList=docClone.querySelector('#indList');
+ const footer=docClone.querySelector('.footer');
+ if(topbar) topbar.remove();
+ if(empty) empty.remove();
+ if(pdfDetail) pdfDetail.remove();
+ if(indList) indList.remove();
+ scripts.forEach(x=>x.remove());
+ if(app){
+   app.classList.remove('hidden');
+   app.querySelectorAll('button[data-rank]').forEach(x=>x.disabled=true);
+   const search=app.querySelector('#q');
+   if(search) search.remove();
+   const tableTools=app.querySelector('.table-tools');
+   if(tableTools){
+     const title=tableTools.querySelector('#tbTitle');
+     const sub=tableTools.querySelector('#tbSub');
+     if(title) title.style.marginBottom='2px';
+     if(sub) sub.style.marginBottom='0';
+   }
+ }
+ const titleName=String(curInd).replace(/\\/g,'\\\\').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+ const titleEl=docClone.querySelector('#ttl');
+ const subEl=docClone.querySelector('#sub');
+ if(titleEl) titleEl.innerHTML='INDÚSTRIA <span>| '+esc(curInd.length>48?curInd.slice(0,46)+'…':curInd)+'</span>';
+ if(subEl) subEl.textContent=curInd+' • visão detalhada por loja, promotor e visita';
+ if(footer){footer.querySelectorAll('span').forEach(x=>x.style.display='none');}
+ const css=[...document.querySelectorAll('style')].map(x=>x.textContent).join('\n');
+ const header=docClone.querySelector('header')?.outerHTML||'';
+ const main=docClone.querySelector('main')?.outerHTML||'';
+ const html='<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ColetorPRO - '+titleName+'</title><style>'+css+'\nbody{background:#f4f6f8!important}.topbar{display:none!important}.pdf-detail{display:none!important}.footer{margin-top:18px}</style></head><body>'+header+main+'</body></html>';
+ const blob=new Blob([html],{type:'text/html;charset=utf-8'});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement('a');
+ const safe=curInd.replace(/[^a-z0-9À-ÿ]+/gi,'_').replace(/^_+|_+$/g,'');
+ a.href=url;a.download='ColetorPRO - '+safe+'.html';
+ document.body.appendChild(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 
 async function loadPublishedData(){
