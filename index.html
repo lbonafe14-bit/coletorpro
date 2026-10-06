@@ -376,7 +376,7 @@ function exportHTML(){
  const replacement=`async function loadPublishedData(){
  try{
   ALL=window.__EXPORTED_DATA__.slice();
-  suppliers=[...new Set(ALL.map(r=>r.forn)).filter(Boolean)].sort((a,b)=>a.localeCompare(b));
+  suppliers=[...new Set(ALL.map(r=>r.forn))].filter(Boolean).sort((a,b)=>a.localeCompare(b));
   const ds=ALL.map(r=>r.date).filter(Boolean).sort((a,b)=>dkey(a)<dkey(b)?-1:1);
   $('period').textContent=ds.length?ds[0]+' A '+ds[ds.length-1]:'SEM PERÍODO';
   $('upd').textContent='Dados exportados em '+new Date().toLocaleDateString('pt-BR');
